@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -14,7 +15,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 require __DIR__.'/settings.php';
 
 Route::get('/login-as/{user}', function ($user) {
-    $user = \App\Models\User::where('name', $user)->firstOrFail();
+    $user = User::where('name', $user)->firstOrFail();
     Auth::loginUsingId($user->id);
     request()->session()->regenerate();
+
+    return redirect()->route('dashboard');
 })->name('loginAs')->middleware('guest');
