@@ -15,9 +15,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
 require __DIR__.'/settings.php';
 
 Route::get('/login-as/{user}', function ($user) {
-    $user = User::where('name', $user)->firstOrFail();
-    Auth::loginUsingId($user->id);
-    request()->session()->regenerate();
+    try {
+        $user = User::where('name', $user)->firstOrFail();
+        Auth::loginUsingId($user->id);
+        request()->session()->regenerate();
 
-    return redirect()->route('dashboard');
+        return redirect()->route('dashboard');
+    } catch (Exception $e) {
+        return redirect()->route('home')->with('error', 'User not found.');
+    }
 })->name('loginAs')->middleware('guest');
