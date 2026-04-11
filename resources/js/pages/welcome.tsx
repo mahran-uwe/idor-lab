@@ -86,7 +86,7 @@ export default function Welcome() {
 
 							<div className="mt-6 space-y-4 text-sm text-[#33413d]">
 								<div className="rounded-2xl border border-[#1a1f1d]/10 bg-white/80 p-4">
-									Verify ownership and role permissions before viewing or
+									Verify ownership and role permissions before showing or
 									modifying records.
 								</div>
 								<div className="rounded-2xl border border-[#1a1f1d]/10 bg-white/80 p-4">
