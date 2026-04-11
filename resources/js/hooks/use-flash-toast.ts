@@ -1,6 +1,5 @@
 import { router } from '@inertiajs/react';
-import { useEffect, useRef } from 'react';
-import type { MutableRefObject } from 'react';
+import { useEffect } from 'react';
 import { toast } from 'sonner';
 import type { FlashToast } from '@/types/ui';
 
@@ -13,7 +12,7 @@ type FlashPayload = {
     message?: string | null;
 };
 
-function toastFromPayload(payload: FlashPayload | undefined, lastSignature: MutableRefObject<string>): void {
+function toastFromPayload(payload: FlashPayload | undefined): void {
     if (!payload) {
         return;
     }
@@ -44,31 +43,31 @@ function toastFromPayload(payload: FlashPayload | undefined, lastSignature: Muta
         messages.push({ type: 'info', message: payload.message });
     }
 
+    const seenInPayload = new Set<string>();
+
     for (const item of messages) {
         const signature = `${item.type}:${item.message}`;
 
-        if (lastSignature.current === signature) {
+        if (seenInPayload.has(signature)) {
             continue;
         }
 
-        lastSignature.current = signature;
+        seenInPayload.add(signature);
         toast[item.type](item.message);
     }
 }
 
 export function useFlashToast(): void {
-    const lastSignature = useRef('');
-
     useEffect(() => {
         const offFlash = router.on('flash', (event) => {
             const payload = (event as CustomEvent<{ flash?: FlashPayload }>).detail?.flash;
-            toastFromPayload(payload, lastSignature);
+            toastFromPayload(payload);
         });
 
         // Capture flash values that arrive in page props after redirects.
         const offSuccess = router.on('success', (event) => {
             const payload = (event as CustomEvent<{ page?: { props?: { flash?: FlashPayload } } }>).detail?.page?.props?.flash;
-            toastFromPayload(payload, lastSignature);
+            toastFromPayload(payload);
         });
 
         return () => {
