@@ -15,9 +15,20 @@ class DatabaseSeeder extends Seeder
     {
         $users = ['User A', 'User B', 'Super Admin'];
         foreach ($users as $user) {
-            User::factory()->create([
+            $user = User::factory()->create([
                 'name' => $user,
                 'email' => strtolower(str_replace(' ', '.', $user)).'@example.com',
+            ]);
+
+            $user->documents()->createMany([
+                [
+                    'title' => 'Document 1 for '.$user->name,
+                    'path' => storage_path('app/demo/documents/Sample Document.pdf'),
+                ],
+                [
+                    'title' => 'Document 2 for '.$user->name,
+                    'path' => storage_path('app/demo/documents/Sample Document.pdf'),
+                ],
             ]);
         }
     }
