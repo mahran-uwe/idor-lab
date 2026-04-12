@@ -1,5 +1,6 @@
 import { Head } from "@inertiajs/react";
-import { useMemo, useState } from "react";
+import { ArrowRight } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import { index as documents } from "@/routes/documents";
 
 type DemoDocument = {
@@ -84,11 +85,20 @@ function DemoColumn({
 	accent: string;
 }) {
 	const [selectedId, setSelectedId] = useState(docs[0]?.id ?? "");
+	const [urlInputValue, setUrlInputValue] = useState(docs[0]?.url ?? "");
+	const [activePreviewUrl, setActivePreviewUrl] = useState(
+		docs[0]?.previewUrl ?? "#",
+	);
 
 	const selectedDocument = useMemo(
 		() => docs.find((doc) => doc.id === selectedId) ?? docs[0],
 		[docs, selectedId],
 	);
+
+	useEffect(() => {
+		setUrlInputValue(selectedDocument?.url ?? "");
+		setActivePreviewUrl(selectedDocument?.previewUrl ?? "#");
+	}, [selectedDocument]);
 
 	const groupedByOwner = useMemo(
 		() => ({
@@ -150,19 +160,33 @@ function DemoColumn({
 				>
 					URL
 				</label>
-				<input
-					id={`${title.replace(/\s+/g, "-").toLowerCase()}-url`}
-					type="text"
-					readOnly
-					value={selectedDocument?.url ?? "#"}
-					className="h-10 w-full rounded-lg border border-sidebar-border/70 bg-muted/40 px-3 text-sm text-foreground outline-none dark:border-sidebar-border"
-				/>
+				<div className="flex items-center gap-2">
+					<input
+						id={`${title.replace(/\s+/g, "-").toLowerCase()}-url`}
+						type="text"
+						value={urlInputValue}
+						onChange={(event) => {
+							setUrlInputValue(event.target.value);
+						}}
+						className="h-10 w-full rounded-lg border border-sidebar-border/70 bg-muted/40 px-3 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring dark:border-sidebar-border"
+					/>
+					<button
+						type="button"
+						onClick={() => {
+							setActivePreviewUrl(urlInputValue.trim() || "#");
+						}}
+						className="inline-flex h-10 shrink-0 items-center justify-center rounded-lg border border-sidebar-border/70 bg-background px-3 text-sm font-medium text-foreground transition-colors hover:bg-muted/60 dark:border-sidebar-border"
+					>
+						<ArrowRight className="size-4" aria-hidden="true" />
+						<span className="sr-only">Go</span>
+					</button>
+				</div>
 			</div>
 
 			<div className="relative flex-1 overflow-hidden rounded-xl border border-sidebar-border/70 bg-muted/20 dark:border-sidebar-border">
-				{selectedDocument?.previewUrl !== "#" ? (
+				{activePreviewUrl !== "#" ? (
 					<iframe
-						src={selectedDocument.previewUrl}
+						src={activePreviewUrl}
 						title={`${selectedDocument.label} preview`}
 						className="h-full min-h-80 w-full"
 					/>
