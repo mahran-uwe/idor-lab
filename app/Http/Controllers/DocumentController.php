@@ -38,7 +38,7 @@ class DocumentController extends Controller
      */
     public function show(Document $document)
     {
-        //
+        return response()->file($document->path);
     }
 
     /**
