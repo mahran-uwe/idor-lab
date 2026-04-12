@@ -1,6 +1,6 @@
 import { Head } from "@inertiajs/react";
 import { ArrowRight } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { index as documents, show as showDocument } from "@/routes/documents";
 
 type BackendDocument = {
@@ -71,25 +71,22 @@ function DemoColumn({
 	docs: DemoDocument[];
 	accent: string;
 }) {
-	const [selectedId, setSelectedId] = useState(docs[0]?.id ?? "");
-	const [urlInputValue, setUrlInputValue] = useState(docs[0]?.url ?? "");
-	const [activePreviewUrl, setActivePreviewUrl] = useState(
-		docs[0]?.previewUrl ?? "#",
+	const [selectedId, setSelectedId] = useState<number | null>(
+		docs[0]?.id ?? null,
 	);
+	const [manualUrlInputValue, setManualUrlInputValue] = useState<string | null>(
+		null,
+	);
+	const [manualPreviewUrl, setManualPreviewUrl] = useState<string | null>(null);
 
 	const selectedDocument = useMemo(
 		() => docs.find((doc) => doc.id === selectedId) ?? docs[0],
 		[docs, selectedId],
 	);
 
-	useEffect(() => {
-		setSelectedId(docs[0]?.id ?? "");
-	}, [docs]);
-
-	useEffect(() => {
-		setUrlInputValue(selectedDocument?.url ?? "");
-		setActivePreviewUrl(selectedDocument?.previewUrl ?? "#");
-	}, [selectedDocument]);
+	const urlInputValue = manualUrlInputValue ?? selectedDocument?.url ?? "";
+	const activePreviewUrl =
+		manualPreviewUrl ?? selectedDocument?.previewUrl ?? "#";
 
 	const groupedByOwner = useMemo(
 		() => ({
@@ -118,6 +115,8 @@ function DemoColumn({
 								type="button"
 								onClick={() => {
 									setSelectedId(doc.id);
+									setManualUrlInputValue(doc.url);
+									setManualPreviewUrl(doc.previewUrl);
 								}}
 								className="block text-left text-sm text-foreground underline decoration-dotted underline-offset-4 hover:text-primary"
 							>
@@ -140,6 +139,8 @@ function DemoColumn({
 								type="button"
 								onClick={() => {
 									setSelectedId(doc.id);
+									setManualUrlInputValue(doc.url);
+									setManualPreviewUrl(doc.previewUrl);
 								}}
 								className="block text-left text-sm text-foreground underline decoration-dotted underline-offset-4 hover:text-primary"
 							>
@@ -165,14 +166,14 @@ function DemoColumn({
 						type="text"
 						value={urlInputValue}
 						onChange={(event) => {
-							setUrlInputValue(event.target.value);
+							setManualUrlInputValue(event.target.value);
 						}}
 						className="h-10 w-full rounded-lg border border-sidebar-border/70 bg-muted/40 px-3 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring dark:border-sidebar-border"
 					/>
 					<button
 						type="button"
 						onClick={() => {
-							setActivePreviewUrl(urlInputValue.trim() || "#");
+							setManualPreviewUrl(urlInputValue.trim() || "#");
 						}}
 						className="inline-flex h-10 shrink-0 items-center justify-center rounded-lg border border-sidebar-border/70 bg-background px-3 text-sm font-medium text-foreground transition-colors hover:bg-muted/60 dark:border-sidebar-border"
 					>
