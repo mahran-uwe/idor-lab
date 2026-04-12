@@ -1,77 +1,64 @@
 import { Head } from "@inertiajs/react";
 import { ArrowRight } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { index as documents } from "@/routes/documents";
+import { index as documents, show as showDocument } from "@/routes/documents";
+
+type BackendDocument = {
+	id: number;
+	user_id: number;
+	title: string;
+};
+
+interface DocumentsIndexProps {
+	documents: BackendDocument[];
+}
 
 type DemoDocument = {
-	id: string;
+	id: number;
 	label: string;
 	owner: "User A" | "User B";
 	url: string;
 	previewUrl: string;
 };
 
-const idorDocuments: DemoDocument[] = [
-	{
-		id: "idor-a-1",
-		label: "User A - Payroll Summary",
-		owner: "User A",
-		url: "/documents/101",
-		previewUrl: "#",
-	},
-	{
-		id: "idor-a-2",
-		label: "User A - Project Contract",
-		owner: "User A",
-		url: "/documents/102",
-		previewUrl: "#",
-	},
-	{
-		id: "idor-b-1",
-		label: "User B - HR Record",
-		owner: "User B",
-		url: "/documents/201",
-		previewUrl: "#",
-	},
-	{
-		id: "idor-b-2",
-		label: "User B - Tax Filing",
-		owner: "User B",
-		url: "/documents/202",
-		previewUrl: "#",
-	},
-];
+function ownerFromUserId(userId: number): DemoDocument["owner"] | null {
+	if (userId === 1) {
+		return "User A";
+	}
 
-const secureDocuments: DemoDocument[] = [
-	{
-		id: "secure-a-1",
-		label: "User A - Payroll Summary",
-		owner: "User A",
-		url: "/documents/101?scope=owned",
-		previewUrl: "#",
-	},
-	{
-		id: "secure-a-2",
-		label: "User A - Project Contract",
-		owner: "User A",
-		url: "/documents/102?scope=owned",
-		previewUrl: "#",
-	},
-	{
-		id: "secure-b-1",
-		label: "User B - HR Record",
-		owner: "User B",
-		url: "/documents/201?scope=owned",
-		previewUrl: "#",
-	},
-	{
-		id: "secure-b-2",
-		label: "User B - Tax Filing",
-		owner: "User B",
-		url: "/documents/202?scope=owned",
-		previewUrl: "#",
-	},
-];
+	if (userId === 2) {
+		return "User B";
+	}
+
+	return null;
+}
+
+function mapDocumentsToDemo(
+	serverDocuments: BackendDocument[],
+	mode: "idor" | "secure",
+): DemoDocument[] {
+	return serverDocuments
+		.map((document) => {
+			const owner = ownerFromUserId(document.user_id);
+
+			if (!owner) {
+				return null;
+			}
+
+			const documentUrl = showDocument.url(document.id);
+			const url =
+				mode === "secure" ? `${documentUrl}?scope=owned` : documentUrl;
+
+			return {
+				id: document.id,
+				label: document.title,
+				owner,
+				url,
+				previewUrl: documentUrl,
+			};
+		})
+		.filter((document): document is DemoDocument => document !== null);
+}
 
 function DemoColumn({
 	title,
@@ -94,6 +81,10 @@ function DemoColumn({
 		() => docs.find((doc) => doc.id === selectedId) ?? docs[0],
 		[docs, selectedId],
 	);
+
+	useEffect(() => {
+		setSelectedId(docs[0]?.id ?? "");
+	}, [docs]);
 
 	useEffect(() => {
 		setUrlInputValue(selectedDocument?.url ?? "");
@@ -120,36 +111,44 @@ function DemoColumn({
 					<h3 className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
 						User A Documents
 					</h3>
-					{groupedByOwner.userA.map((doc) => (
-						<button
-							key={doc.id}
-							type="button"
-							onClick={() => {
-								setSelectedId(doc.id);
-							}}
-							className="block text-left text-sm text-foreground underline decoration-dotted underline-offset-4 hover:text-primary"
-						>
-							{doc.label}
-						</button>
-					))}
+					{groupedByOwner.userA.length > 0 ? (
+						groupedByOwner.userA.map((doc) => (
+							<button
+								key={doc.id}
+								type="button"
+								onClick={() => {
+									setSelectedId(doc.id);
+								}}
+								className="block text-left text-sm text-foreground underline decoration-dotted underline-offset-4 hover:text-primary"
+							>
+								{doc.label}
+							</button>
+						))
+					) : (
+						<p className="text-sm text-muted-foreground">No documents.</p>
+					)}
 				</div>
 
 				<div className="space-y-2 rounded-xl border border-sidebar-border/70 p-3 dark:border-sidebar-border">
 					<h3 className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
 						User B Documents
 					</h3>
-					{groupedByOwner.userB.map((doc) => (
-						<button
-							key={doc.id}
-							type="button"
-							onClick={() => {
-								setSelectedId(doc.id);
-							}}
-							className="block text-left text-sm text-foreground underline decoration-dotted underline-offset-4 hover:text-primary"
-						>
-							{doc.label}
-						</button>
-					))}
+					{groupedByOwner.userB.length > 0 ? (
+						groupedByOwner.userB.map((doc) => (
+							<button
+								key={doc.id}
+								type="button"
+								onClick={() => {
+									setSelectedId(doc.id);
+								}}
+								className="block text-left text-sm text-foreground underline decoration-dotted underline-offset-4 hover:text-primary"
+							>
+								{doc.label}
+							</button>
+						))
+					) : (
+						<p className="text-sm text-muted-foreground">No documents.</p>
+					)}
 				</div>
 			</div>
 
@@ -184,7 +183,7 @@ function DemoColumn({
 			</div>
 
 			<div className="relative flex-1 overflow-hidden rounded-xl border border-sidebar-border/70 bg-muted/20 dark:border-sidebar-border">
-				{activePreviewUrl !== "#" ? (
+				{selectedDocument && activePreviewUrl !== "#" ? (
 					<iframe
 						src={activePreviewUrl}
 						title={`${selectedDocument.label} preview`}
@@ -210,7 +209,18 @@ function DemoColumn({
 	);
 }
 
-export default function DocumentsIndex() {
+export default function DocumentsIndex({
+	documents: serverDocuments,
+}: DocumentsIndexProps) {
+	const idorDocuments = useMemo(
+		() => mapDocumentsToDemo(serverDocuments, "idor"),
+		[serverDocuments],
+	);
+	const secureDocuments = useMemo(
+		() => mapDocumentsToDemo(serverDocuments, "secure"),
+		[serverDocuments],
+	);
+
 	return (
 		<>
 			<Head title="Documents" />

@@ -12,8 +12,13 @@ class DocumentController extends Controller
      */
     public function index()
     {
+        $documents = Document::query()
+            ->select(['id', 'user_id', 'title'])
+            ->orderBy('id')
+            ->get();
+
         return inertia('Documents/Index', [
-            'documents' => Document::all(),
+            'documents' => $documents,
         ]);
     }
 
