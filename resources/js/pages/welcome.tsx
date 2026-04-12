@@ -17,7 +17,7 @@ export default function Welcome() {
 				<main className="relative mx-auto flex min-h-screen w-full max-w-6xl flex-col justify-between px-6 py-10 sm:px-10 lg:py-14">
 					<header className="rise-in">
 						<p className="inline-flex items-center rounded-full border border-[#1a1f1d]/15 bg-white/75 px-4 py-1 text-xs font-semibold tracking-[0.18em] uppercase shadow-sm backdrop-blur">
-							Prototype
+							IDOR Lab
 						</p>
 					</header>
 
