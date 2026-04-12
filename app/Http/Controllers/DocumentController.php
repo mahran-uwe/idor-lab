@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\DocumentRequest;
-use App\Http\Requests\DocumentRequest;
 use App\Models\Document;
 
 class DocumentController extends Controller
