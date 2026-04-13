@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Product;
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -57,16 +57,16 @@ class DatabaseSeeder extends Seeder
             foreach ($invoices as $invoice) {
                 $invoice->items()->createMany([
                     [
-                        'product_id' => 1,
-                        'quantity' => 2,
-                        'unit_price' => 50,
-                        'line_total' => 100,
+                        'product_id' => ($product = Product::inRandomOrder()->first())->id,
+                        'quantity' => $quantity = rand(1, 5),
+                        'unit_price' => $product->price,
+                        'line_total' => $quantity * $product->price,
                     ],
                     [
-                        'product_id' => 2,
-                        'quantity' => 1,
-                        'unit_price' => 100,
-                        'line_total' => 100,
+                        'product_id' => ($product = Product::inRandomOrder()->first())->id,
+                        'quantity' => $quantity = rand(1, 5),
+                        'unit_price' => $product->price,
+                        'line_total' => $quantity * $product->price,
                     ],
                 ]);
             }
