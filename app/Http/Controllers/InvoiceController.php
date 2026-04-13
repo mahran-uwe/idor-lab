@@ -41,7 +41,17 @@ class InvoiceController extends Controller
      */
     public function show(Invoice $invoice)
     {
-        dd($invoice);
+        $invoice->load([
+            'items' => fn ($query) => $query
+                ->select(['id', 'invoice_id', 'product_id', 'quantity', 'unit_price', 'line_total'])
+                ->with([
+                    'product:id,name',
+                ]),
+        ]);
+
+        return inertia('Invoices/Show', [
+            'invoice' => $invoice,
+        ]);
     }
 
     /**
