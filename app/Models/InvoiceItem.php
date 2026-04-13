@@ -13,6 +13,10 @@ class InvoiceItem extends Model
 
     protected static function booted()
     {
+        static::saving(function ($item) {
+            $item->line_total = $item->quantity * $item->unit_price;
+        });
+
         $updateTotal = function ($item) {
             $invoice = $item->invoice;
             $newSubtotal = $invoice->items()->sum('line_total');
