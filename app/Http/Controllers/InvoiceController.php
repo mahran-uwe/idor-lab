@@ -12,7 +12,12 @@ class InvoiceController extends Controller
      */
     public function index()
     {
-        //
+        $invoices = Invoice::query()
+            ->get();
+
+        return inertia('Invoices/Index', [
+            'invoices' => $invoices,
+        ]);
     }
 
     /**
@@ -36,7 +41,7 @@ class InvoiceController extends Controller
      */
     public function show(Invoice $invoice)
     {
-        //
+        dd($invoice);
     }
 
     /**
