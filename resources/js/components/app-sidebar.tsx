@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/sidebar";
 import { dashboard } from "@/routes";
 import { index as documents } from "@/routes/documents";
+import { index as invoices } from "@/routes/invoices";
 import type { NavItem } from "@/types";
 
 const mainNavItems: NavItem[] = [
@@ -26,6 +27,11 @@ const mainNavItems: NavItem[] = [
 	{
 		title: "Documents",
 		href: documents(),
+		icon: BookOpen,
+	},
+	{
+		title: "Invoices",
+		href: invoices(),
 		icon: BookOpen,
 	},
 ];
