@@ -88,6 +88,10 @@ function DemoColumn({
 	const activePreviewUrl =
 		manualPreviewUrl ?? selectedDocument?.previewUrl ?? "#";
 
+	const applyUrlToPreview = () => {
+		setManualPreviewUrl(urlInputValue.trim() || "#");
+	};
+
 	const groupedByOwner = useMemo(
 		() => ({
 			userA: docs.filter((doc) => doc.owner === "User A"),
@@ -168,12 +172,18 @@ function DemoColumn({
 						onChange={(event) => {
 							setManualUrlInputValue(event.target.value);
 						}}
+						onKeyDown={(event) => {
+							if (event.key === "Enter") {
+								event.preventDefault();
+								applyUrlToPreview();
+							}
+						}}
 						className="h-10 w-full rounded-lg border border-sidebar-border/70 bg-muted/40 px-3 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring dark:border-sidebar-border"
 					/>
 					<button
 						type="button"
 						onClick={() => {
-							setManualPreviewUrl(urlInputValue.trim() || "#");
+							applyUrlToPreview();
 						}}
 						className="inline-flex h-10 shrink-0 items-center justify-center rounded-lg border border-sidebar-border/70 bg-background px-3 text-sm font-medium text-foreground transition-colors hover:bg-muted/60 dark:border-sidebar-border"
 					>
