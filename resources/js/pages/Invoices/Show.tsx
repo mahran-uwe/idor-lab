@@ -108,7 +108,7 @@ export default function InvoicesShow({ invoice }: InvoiceShowProps) {
 						</div>
 
 						<div className="overflow-x-auto">
-							<table className="w-full min-w-[560px] text-left text-sm">
+							<table className="w-full min-w-140 text-left text-sm">
 								<thead className="bg-muted/50 text-xs tracking-wide text-muted-foreground uppercase">
 									<tr>
 										<th className="px-5 py-3 font-semibold">Item</th>
@@ -192,10 +192,5 @@ export default function InvoicesShow({ invoice }: InvoiceShowProps) {
 }
 
 InvoicesShow.layout = {
-	breadcrumbs: [
-		{
-			title: "Invoices",
-			href: invoices(),
-		},
-	],
+	breadcrumbs: [],
 };
