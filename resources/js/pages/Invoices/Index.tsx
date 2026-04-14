@@ -52,15 +52,16 @@ function mapInvoicesToDemo(
 				return null;
 			}
 
-			const invoiceUrl = showInsecureInvoice.url(invoice.id);
-			const url =
-				mode === "secure" ? showSecureInvoice.url(invoice.id) : invoiceUrl;
+			const invoiceUrl =
+				mode === "secure"
+					? showSecureInvoice.url(invoice.id)
+					: showInsecureInvoice.url(invoice.id);
 
 			return {
 				id: invoice.id,
 				label: `${invoice.invoice_number} • Total ${invoice.total}`,
 				owner,
-				url,
+				url: invoiceUrl,
 				previewUrl: invoiceUrl,
 			};
 		})
