@@ -1,7 +1,8 @@
 import { Head } from "@inertiajs/react";
 import { ArrowRight } from "lucide-react";
 import { useMemo, useState } from "react";
-import { index as invoices, show as showInvoice } from "@/routes/insecure/invoices";
+import { index as invoices } from "@/routes/invoices";
+import { show as showInvoice } from "@/routes/insecure/invoices";
 
 type BackendInvoice = {
 	id: number;
