@@ -1,8 +1,9 @@
 import { Head } from "@inertiajs/react";
 import { ArrowRight } from "lucide-react";
 import { useMemo, useState } from "react";
+import { show as showInsecureInvoice } from "@/routes/insecure/invoices";
 import { index as invoices } from "@/routes/invoices";
-import { show as showInvoice } from "@/routes/insecure/invoices";
+import { show as showSecureInvoice } from "@/routes/secure/invoices";
 
 type BackendInvoice = {
 	id: number;
@@ -51,8 +52,9 @@ function mapInvoicesToDemo(
 				return null;
 			}
 
-			const invoiceUrl = showInvoice.url(invoice.id);
-			const url = mode === "secure" ? `${invoiceUrl}?scope=owned` : invoiceUrl;
+			const invoiceUrl = showInsecureInvoice.url(invoice.id);
+			const url =
+				mode === "secure" ? showSecureInvoice.url(invoice.id) : invoiceUrl;
 
 			return {
 				id: invoice.id,

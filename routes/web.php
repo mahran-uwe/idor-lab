@@ -5,6 +5,7 @@ use App\Http\Controllers\InsecureDocumentController;
 use App\Http\Controllers\InsecureInvoiceController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\SecureDocumentController;
+use App\Http\Controllers\SecureInvoiceController;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -27,6 +28,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::prefix('secure')->name('secure.')->group(function () {
         Route::resource('documents', SecureDocumentController::class)->only('show');
+        Route::resource('invoices', SecureInvoiceController::class)->only('show');
     });
 });
 
