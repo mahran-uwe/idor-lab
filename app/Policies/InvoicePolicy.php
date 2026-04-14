@@ -21,7 +21,7 @@ class InvoicePolicy
      */
     public function view(User $user, Invoice $invoice): bool
     {
-        return false;
+        return $user->id === $invoice->user_id || $user->is_admin;
     }
 
     /**
