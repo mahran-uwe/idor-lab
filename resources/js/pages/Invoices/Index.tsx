@@ -54,8 +54,8 @@ function mapInvoicesToDemo(
 
 			const invoiceUrl =
 				mode === "secure"
-					? showSecureInvoice.url(invoice.id)
-					: showInsecureInvoice.url(invoice.id);
+					? showSecureInvoice.url(invoice.invoice_number)
+					: showInsecureInvoice.url(invoice.invoice_number);
 
 			return {
 				id: invoice.id,

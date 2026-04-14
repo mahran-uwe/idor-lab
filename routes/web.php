@@ -23,12 +23,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('insecure')->name('insecure.')->group(function () {
         Route::resource('documents', InsecureDocumentController::class)->only('show');
 
-        Route::resource('invoices', InsecureInvoiceController::class)->only('show');
+        Route::resource('invoices', InsecureInvoiceController::class)
+            ->scoped(['invoice' => 'invoice_number'])
+            ->only('show');
     });
 
     Route::prefix('secure')->name('secure.')->group(function () {
         Route::resource('documents', SecureDocumentController::class)->only('show');
-        Route::resource('invoices', SecureInvoiceController::class)->only('show');
+        Route::resource('invoices', SecureInvoiceController::class)
+            ->scoped(['invoice' => 'invoice_number'])
+            ->only('show');
     });
 });
 
