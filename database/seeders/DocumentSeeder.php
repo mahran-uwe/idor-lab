@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 
 class DocumentSeeder extends Seeder
 {
@@ -13,18 +13,16 @@ class DocumentSeeder extends Seeder
      */
     public function run(): void
     {
-        $users = ['User A', 'User B', 'Super Admin'];
+        /** @var Collection<int, User> $users */
+        $users = User::query()
+            ->whereIn('email', [
+                'user.a@example.com',
+                'user.b@example.com',
+            ])
+            ->orderBy('id')
+            ->get();
 
-        foreach ($users as $name) {
-            $email = strtolower(str_replace(' ', '.', $name)).'@example.com';
-
-            $user = User::query()->firstOrCreate(
-                ['email' => $email],
-                [
-                    'name' => $name,
-                    'password' => Hash::make('password'),
-                ],
-            );
+        foreach ($users as $user) {
 
             $user->documents()->updateOrCreate(
                 ['title' => 'Document 1 for '.$user->name],
