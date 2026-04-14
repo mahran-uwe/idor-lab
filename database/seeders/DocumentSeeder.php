@@ -25,12 +25,12 @@ class DocumentSeeder extends Seeder
         foreach ($users as $user) {
 
             $user->documents()->updateOrCreate(
-                ['title' => 'Document 1 for '.$user->name],
+                ['title' => 'Document 1'],
                 ['path' => storage_path('app/demo/documents/Sample Document.pdf')],
             );
 
             $user->documents()->updateOrCreate(
-                ['title' => 'Document 2 for '.$user->name],
+                ['title' => 'Document 2'],
                 ['path' => storage_path('app/demo/documents/Sample Document.pdf')],
             );
         }
