@@ -38,6 +38,15 @@ return [
             'report' => false,
         ],
 
+        'demo' => [
+            'driver' => 'local',
+            'root' => storage_path('app/demo'),
+            'url' => env('APP_URL').'/demo',
+            'serve' => true,
+            'throw' => false,
+            'report' => false,
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
