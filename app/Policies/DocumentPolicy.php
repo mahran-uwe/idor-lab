@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Models\Document;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class DocumentPolicy
 {
@@ -21,7 +20,7 @@ class DocumentPolicy
      */
     public function view(User $user, Document $document): bool
     {
-        return false;
+        return $user->id === $document->user_id || $user->role === 'admin';
     }
 
     /**
