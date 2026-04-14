@@ -59,7 +59,7 @@ function mapInvoicesToDemo(
 
 			return {
 				id: invoice.id,
-				label: `${invoice.invoice_number} • Total ${invoice.total}`,
+				label: `${invoice.invoice_number}`,
 				owner,
 				url: invoiceUrl,
 				previewUrl: invoiceUrl,
