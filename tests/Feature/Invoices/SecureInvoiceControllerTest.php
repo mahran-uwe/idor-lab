@@ -3,7 +3,6 @@
 use App\Models\Invoice;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Gate;
 
 uses(RefreshDatabase::class);
 
@@ -23,7 +22,7 @@ test('users cannot view secure invoices they do not own', function () {
 
     $response = $this
         ->actingAs($intruder)
-        ->get(route('secure.invoices.show', $invoice));
+        ->get(route('secure.invoices.show', ['invoice' => $invoice->invoice_number]));
 
     $response->assertForbidden();
 });
