@@ -1,7 +1,8 @@
 import { Head } from "@inertiajs/react";
 import { ArrowRight } from "lucide-react";
 import { useMemo, useState } from "react";
-import { index as documents, show as showDocument } from "@/routes/documents";
+import { index as documents } from "@/routes/documents";
+import { show as showInsecureDocument } from "@/routes/insecure/documents";
 import { show as showSecureDocument } from "@/routes/secure/documents";
 
 type BackendDocument = {
@@ -49,7 +50,7 @@ function mapDocumentsToDemo(
 			const documentUrl =
 				mode === "secure"
 					? showSecureDocument.url(document.id)
-					: showDocument.url(document.id);
+					: showInsecureDocument.url(document.id);
 
 			return {
 				id: document.id,
