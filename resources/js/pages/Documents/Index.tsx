@@ -2,6 +2,7 @@ import { Head } from "@inertiajs/react";
 import { ArrowRight } from "lucide-react";
 import { useMemo, useState } from "react";
 import { index as documents, show as showDocument } from "@/routes/documents";
+import { show as showSecureDocument } from "@/routes/secure/documents";
 
 type BackendDocument = {
 	id: number;
@@ -45,15 +46,16 @@ function mapDocumentsToDemo(
 				return null;
 			}
 
-			const documentUrl = showDocument.url(document.id);
-			const url =
-				mode === "secure" ? `${documentUrl}?scope=owned` : documentUrl;
+			const documentUrl =
+				mode === "secure"
+					? showSecureDocument.url(document.id)
+					: showDocument.url(document.id);
 
 			return {
 				id: document.id,
 				label: document.title,
 				owner,
-				url,
+				url: documentUrl,
 				previewUrl: documentUrl,
 			};
 		})
