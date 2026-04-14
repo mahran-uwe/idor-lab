@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\InvoiceRequest;
-use App\Models\Invoice;
+use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Handle the incoming request.
      */
-    public function index()
+    public function __invoke(Request $request)
     {
         $invoices = Invoice::query()
             ->get();
@@ -18,63 +17,5 @@ class InvoiceController extends Controller
         return inertia('Invoices/Index', [
             'invoices' => $invoices,
         ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(InvoiceRequest $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Invoice $invoice)
-    {
-        $invoice->load([
-            'items' => fn ($query) => $query
-                ->select(['id', 'invoice_id', 'product_id', 'quantity', 'unit_price', 'line_total'])
-                ->with([
-                    'product:id,name',
-                ]),
-        ]);
-
-        return inertia('Invoices/Show', [
-            'invoice' => $invoice,
-        ]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Invoice $invoice)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(InvoiceRequest $request, Invoice $invoice)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Invoice $invoice)
-    {
-        //
     }
 }
