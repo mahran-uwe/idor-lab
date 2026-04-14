@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\InsecureDocumentController;
+use App\Http\Controllers\InsecureInvoiceController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\SecureDocumentController;
 use App\Models\User;
@@ -14,12 +16,17 @@ Route::inertia('/', 'welcome', [
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('dashboard', 'dashboard')->name('dashboard');
 
-    Route::resource('documents', DocumentController::class);
+    Route::get('documents', DocumentController::class)->name('documents.index');
+    Route::get('invoices', InvoiceController::class)->name('invoices.index');
 
-    Route::resource('invoices', InvoiceController::class);
+    Route::prefix('insecure')->name('insecure.')->group(function () {
+        Route::resource('documents', InsecureDocumentController::class)->only('show');
+
+        Route::resource('invoices', InsecureInvoiceController::class)->only('show');
+    });
 
     Route::prefix('secure')->name('secure.')->group(function () {
-        Route::resource('documents', SecureDocumentController::class)->only(['show']);
+        Route::resource('documents', SecureDocumentController::class)->only('show');
     });
 });
 
