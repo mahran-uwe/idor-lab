@@ -85,7 +85,12 @@ export function AccessDemoColumn({
 					? `My ${resourceLabelPlural}`
 					: `${section.owner} ${resourceLabelPlural}`,
 		}));
-	}, [groupedByOwner.userA, groupedByOwner.userB, prioritizeOwner, resourceLabelPlural]);
+	}, [
+		groupedByOwner.userA,
+		groupedByOwner.userB,
+		prioritizeOwner,
+		resourceLabelPlural,
+	]);
 
 	const normalizedTitle = title.replace(/\s+/g, "-").toLowerCase();
 	const isSecure = type === "secure";

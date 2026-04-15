@@ -1,4 +1,4 @@
-import { Head } from "@inertiajs/react";
+import { Head, usePage } from "@inertiajs/react";
 import { useMemo } from "react";
 import { AccessDemoColumn } from "@/components/access-demo-column";
 import type { AccessDemoItem } from "@/lib/access-demo";
@@ -53,6 +53,9 @@ function mapInvoicesToDemo(
 export default function InvoicesIndex({
 	invoices: serverInvoices,
 }: InvoicesIndexProps) {
+	const { auth } = usePage().props;
+	const prioritizedOwner = ownerFromUserId(auth.user.id);
+
 	const idorInvoices = useMemo(
 		() => mapInvoicesToDemo(serverInvoices, "idor"),
 		[serverInvoices],
@@ -83,6 +86,7 @@ export default function InvoicesIndex({
 						title="IDOR Demonstration"
 						description="Direct invoice references are shown without authorisation checks."
 						items={idorInvoices}
+						prioritizeOwner={prioritizedOwner}
 						accent="text-amber-700 dark:text-amber-300"
 						resourceLabelPlural="Invoices"
 						previewAreaTitle="Invoice preview area"
@@ -94,6 +98,7 @@ export default function InvoicesIndex({
 						title="Secure Implementation"
 						description="Invoice access is represented with authorisation checks."
 						items={secureInvoices}
+						prioritizeOwner={prioritizedOwner}
 						accent="text-emerald-700 dark:text-emerald-300"
 						resourceLabelPlural="Invoices"
 						previewAreaTitle="Invoice preview area"
