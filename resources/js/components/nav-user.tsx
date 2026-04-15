@@ -32,12 +32,19 @@ export function NavUser() {
 	};
 
 	return (
-		<SidebarMenu>
+		<SidebarMenu
+			className={
+				isExpanded
+					? "rounded-lg border bg-popover p-1 text-popover-foreground shadow-md"
+					: ""
+			}
+		>
 			<SidebarMenuItem>
 				{isExpanded ? (
 					<SidebarMenuButton
 						size="lg"
-						className="text-sidebar-accent-foreground"
+						className="text-sidebar-accent-foreground data-[state=open]:bg-sidebar-accent"
+						data-state="open"
 					>
 						<UserInfo user={auth.user} showEmail={true} />
 					</SidebarMenuButton>
@@ -63,7 +70,7 @@ export function NavUser() {
 				)}
 			</SidebarMenuItem>
 
-			<SidebarMenuItem className={isExpanded ? "" : "hidden"}>
+			<SidebarMenuItem className={isExpanded ? "mt-1" : "hidden"}>
 				<SidebarMenuButton asChild>
 					<Link href={edit()} prefetch>
 						<Settings />
