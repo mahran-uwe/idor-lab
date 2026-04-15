@@ -18,7 +18,7 @@ class ProductFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->word(),
+            'name' => ucfirst($this->faker->safeColorName()) . ' ' . ucfirst($this->faker->word()),
             'price' => $this->faker->randomNumber(2, true),
         ];
     }
