@@ -13,29 +13,16 @@ class TestController extends Controller
     {
         $validated = $request->validate([
             'run' => ['nullable', 'boolean'],
-            'test_path' => ['nullable', 'string', 'max:255', 'regex:/^tests\/.+\.php$/'],
-            'filter' => ['nullable', 'string', 'max:255'],
         ]);
 
         $shouldRun = (bool) ($validated['run'] ?? false);
-        $testPath = $validated['test_path'] ?? null;
-        $filter = $validated['filter'] ?? null;
         $result = null;
 
         if ($shouldRun) {
             $parameters = [
-                '--compact' => true,
                 '--without-tty' => true,
                 '--no-interaction' => true,
             ];
-
-            if (is_string($testPath) && $testPath !== '') {
-                $parameters['test'] = $testPath;
-            }
-
-            if (is_string($filter) && $filter !== '') {
-                $parameters['--filter'] = $filter;
-            }
 
             $originalWorkingDirectory = getcwd();
 
@@ -51,17 +38,54 @@ class TestController extends Controller
                 }
             }
 
+            $output = Artisan::output();
+
             $result = [
                 'exit_code' => $exitCode,
                 'status' => $exitCode === 0 ? 'passed' : 'failed',
-                'output' => Artisan::output(),
+                'output' => $output,
+                'tests' => $this->parseTestsFromOutput($output),
             ];
         }
 
         return Inertia::render('Tests/Index', [
-            'requestedPath' => $testPath,
-            'requestedFilter' => $filter,
             'result' => $result,
         ]);
+    }
+
+    /**
+     * @return array<int, array{name: string, status: 'passed'|'failed', suite: string|null}>
+     */
+    private function parseTestsFromOutput(string $output): array
+    {
+        $lines = preg_split('/\R/', $output) ?: [];
+        $tests = [];
+        $currentSuite = null;
+
+        foreach ($lines as $line) {
+            $cleanLine = trim((string) preg_replace('/\e\[[\d;]*m/', '', $line));
+
+            if ($cleanLine === '') {
+                continue;
+            }
+
+            if (preg_match('/^(PASS|FAIL)\s+(.+)$/', $cleanLine, $suiteMatches) === 1) {
+                $currentSuite = trim($suiteMatches[2]);
+
+                continue;
+            }
+
+            if (preg_match('/^([✓✔⨯✗])\s+(.+)$/u', $cleanLine, $testMatches) !== 1) {
+                continue;
+            }
+
+            $tests[] = [
+                'name' => trim($testMatches[2]),
+                'status' => in_array($testMatches[1], ['✓', '✔'], true) ? 'passed' : 'failed',
+                'suite' => $currentSuite,
+            ];
+        }
+
+        return $tests;
     }
 }
