@@ -70,7 +70,7 @@ export default function UUIDIndex({
 						UUID Access Demo
 					</h1>
 					<p className="text-sm text-muted-foreground">
-						Demonstrates that UUIDs alone is not sufficient
+						Demonstrates that UUIDs alone is insufficient
 						to prevent IDOR attacks. Security through obscurity fails when
 						authorization checks are not enforced on the server.
 					</p>
