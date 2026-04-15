@@ -19,6 +19,27 @@ type TestsIndexProps = {
 	result?: TestRunResult | null;
 };
 
+function splitTestNameAndDuration(testName: string): {
+	name: string;
+	duration: string | null;
+} {
+	const durationMatch = testName.match(
+		/^(.*?)(?:\s+)(\d+(?:\.\d+)?\s?(?:ms|s))$/i,
+	);
+
+	if (!durationMatch) {
+		return {
+			name: testName,
+			duration: null,
+		};
+	}
+
+	return {
+		name: durationMatch[1].trim(),
+		duration: durationMatch[2],
+	};
+}
+
 export default function TestsIndex({ result }: TestsIndexProps) {
 	const [isRunning, setIsRunning] = useState(false);
 
@@ -157,8 +178,8 @@ export default function TestsIndex({ result }: TestsIndexProps) {
 							Automated Tests
 						</h1>
 						<p className="text-sm text-muted-foreground">
-							Run automated tests to verify that the IDOR prevention mechanisms
-							are working as expected.
+							Run automated tests to verify that the IDOR Lab application is
+							working as expected.
 						</p>
 						<p className="text-sm text-muted-foreground"></p>
 					</div>
@@ -175,8 +196,8 @@ export default function TestsIndex({ result }: TestsIndexProps) {
 				</div>
 
 				{result ? (
-					<div className="rounded-xl border border-sidebar-border/70 bg-background/80 p-4 dark:border-sidebar-border">
-						<h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+					<div className="rounded-xl font-mono border border-sidebar-border/70 bg-background/80 p-4 dark:border-sidebar-border">
+						<h2 className="mb-2 font-semibold uppercase tracking-wide text-muted-foreground">
 							Summary
 						</h2>
 						<div className="space-y-1 text-sm text-foreground">
@@ -214,18 +235,11 @@ export default function TestsIndex({ result }: TestsIndexProps) {
 					</div>
 				) : null}
 
-				<div className="rounded-xl border border-sidebar-border/70 bg-background/80 p-4 dark:border-sidebar-border">
+				<div className="font-mono rounded-xl border border-sidebar-border/70 bg-background/80 p-4 dark:border-sidebar-border">
 					<div className="mb-3 flex items-center justify-between">
-						<h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+						<h2 className="font-semibold uppercase tracking-wide text-muted-foreground">
 							Result
 						</h2>
-						{result ? (
-							<span className="text-xs text-muted-foreground">
-								{suites.length} suite{suites.length === 1 ? "" : "s"} ·{" "}
-								{result.tests.length} test
-								{result.tests.length === 1 ? "" : "s"}
-							</span>
-						) : null}
 					</div>
 
 					{result && suites.length > 0 ? (
@@ -251,27 +265,41 @@ export default function TestsIndex({ result }: TestsIndexProps) {
 									</div>
 
 									<ul className="space-y-2">
-										{suite.tests.map((test) => (
-											<li
-												key={test.key}
-												className="flex items-start gap-2 text-sm text-foreground"
-											>
-												{test.status === "passed" ? (
-													<Check
-														className="mt-0.5 size-4 shrink-0 text-emerald-600 dark:text-emerald-400"
-														aria-label="passed"
-													/>
-												) : (
-													<X
-														className="mt-0.5 size-4 shrink-0 text-rose-600 dark:text-rose-400"
-														aria-label="failed"
-													/>
-												)}
-												<span className="min-w-0 wrap-break-word">
-													{test.name}
-												</span>
-											</li>
-										))}
+										{suite.tests.map((test) => {
+											const parsedTest = splitTestNameAndDuration(test.name);
+
+											return (
+												<li
+													key={test.key}
+													className="flex items-start gap-2 text-sm text-foreground"
+												>
+													<div className="flex min-w-0 items-start gap-2">
+														{test.status === "passed" ? (
+															<Check
+																className="mt-0.5 size-4 shrink-0 text-emerald-600 dark:text-emerald-400"
+																aria-label="passed"
+															/>
+														) : (
+															<X
+																className="mt-0.5 size-4 shrink-0 text-rose-600 dark:text-rose-400"
+																aria-label="failed"
+															/>
+														)}
+														<span className="min-w-0 wrap-break-word">
+															{parsedTest.name}
+														</span>
+													</div>
+													{parsedTest.duration ? (
+														<>
+															<span className="mt-3 h-px flex-1 border-b border-dashed border-muted-foreground/40" />
+															<span className="mt-0.5 shrink-0 text-xs text-muted-foreground tabular-nums">
+																{parsedTest.duration}
+															</span>
+														</>
+													) : null}
+												</li>
+											);
+										})}
 									</ul>
 								</section>
 							))}
