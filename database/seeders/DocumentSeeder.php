@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class DocumentSeeder extends Seeder
 {
@@ -26,12 +27,18 @@ class DocumentSeeder extends Seeder
 
             $user->documents()->updateOrCreate(
                 ['title' => 'Document 1'],
-                ['path' => storage_path('app/demo/documents/Sample Document.pdf')],
+                [
+                    'uuid' => Str::uuid(),
+                    'path' => storage_path('app/demo/documents/Sample Document.pdf'),
+                ],
             );
 
             $user->documents()->updateOrCreate(
                 ['title' => 'Document 2'],
-                ['path' => storage_path('app/demo/documents/Sample Document.pdf')],
+                [
+                    'uuid' => Str::uuid(),
+                    'path' => storage_path('app/demo/documents/Sample Document.pdf'),
+                ],
             );
         }
     }
