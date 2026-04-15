@@ -124,7 +124,7 @@ export function AccessDemoColumn({
 						className="space-y-2 rounded-xl border border-sidebar-border/70 p-3 dark:border-sidebar-border"
 					>
 						<div className="flex items-center gap-2">
-							<h3 className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+							<h3 className="text-xs font-semibold tracking-wide uppercase">
 								{section.heading}
 							</h3>
 							{prioritizeOwner && section.owner !== prioritizeOwner ? (
