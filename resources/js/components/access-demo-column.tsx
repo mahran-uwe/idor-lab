@@ -1,0 +1,174 @@
+import { ArrowRight } from "lucide-react";
+import { useMemo, useState } from "react";
+import type { AccessDemoItem } from "@/lib/access-demo";
+
+interface AccessDemoColumnProps {
+	title: string;
+	description: string;
+	items: AccessDemoItem[];
+	accent: string;
+	resourceLabelPlural: string;
+	previewAreaTitle: string;
+	previewHint: string;
+}
+
+export function AccessDemoColumn({
+	title,
+	description,
+	items,
+	accent,
+	resourceLabelPlural,
+	previewAreaTitle,
+	previewHint,
+}: AccessDemoColumnProps) {
+	const [selectedId, setSelectedId] = useState<number | null>(
+		items[0]?.id ?? null,
+	);
+	const [manualUrlInputValue, setManualUrlInputValue] = useState<string | null>(
+		null,
+	);
+	const [manualPreviewUrl, setManualPreviewUrl] = useState<string | null>(null);
+
+	const selectedItem = useMemo(
+		() => items.find((item) => item.id === selectedId) ?? items[0],
+		[items, selectedId],
+	);
+
+	const urlInputValue = manualUrlInputValue ?? selectedItem?.url ?? "";
+	const activePreviewUrl = manualPreviewUrl ?? selectedItem?.previewUrl ?? "#";
+
+	const applyUrlToPreview = () => {
+		setManualPreviewUrl(urlInputValue.trim() || "#");
+	};
+
+	const groupedByOwner = useMemo(
+		() => ({
+			userA: items.filter((item) => item.owner === "User A"),
+			userB: items.filter((item) => item.owner === "User B"),
+		}),
+		[items],
+	);
+
+	const normalizedTitle = title.replace(/\s+/g, "-").toLowerCase();
+
+	return (
+		<section className="flex min-h-170 flex-col gap-4 rounded-2xl border border-sidebar-border/70 bg-background/95 p-4 shadow-sm dark:border-sidebar-border">
+			<div className="space-y-1">
+				<h2 className="text-xl font-semibold tracking-tight">{title}</h2>
+				<p className="text-sm text-muted-foreground">{description}</p>
+			</div>
+
+			<div className="grid gap-4 md:grid-cols-2">
+				<div className="space-y-2 rounded-xl border border-sidebar-border/70 p-3 dark:border-sidebar-border">
+					<h3 className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+						User A {resourceLabelPlural}
+					</h3>
+					{groupedByOwner.userA.length > 0 ? (
+						groupedByOwner.userA.map((item) => (
+							<button
+								key={item.id}
+								type="button"
+								onClick={() => {
+									setSelectedId(item.id);
+									setManualUrlInputValue(item.url);
+									setManualPreviewUrl(item.previewUrl);
+								}}
+								className="block text-left text-sm text-foreground underline decoration-dotted underline-offset-4 hover:text-primary"
+							>
+								{item.label}
+							</button>
+						))
+					) : (
+						<p className="text-sm text-muted-foreground">
+							No {resourceLabelPlural.toLowerCase()}.
+						</p>
+					)}
+				</div>
+
+				<div className="space-y-2 rounded-xl border border-sidebar-border/70 p-3 dark:border-sidebar-border">
+					<h3 className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+						User B {resourceLabelPlural}
+					</h3>
+					{groupedByOwner.userB.length > 0 ? (
+						groupedByOwner.userB.map((item) => (
+							<button
+								key={item.id}
+								type="button"
+								onClick={() => {
+									setSelectedId(item.id);
+									setManualUrlInputValue(item.url);
+									setManualPreviewUrl(item.previewUrl);
+								}}
+								className="block text-left text-sm text-foreground underline decoration-dotted underline-offset-4 hover:text-primary"
+							>
+								{item.label}
+							</button>
+						))
+					) : (
+						<p className="text-sm text-muted-foreground">
+							No {resourceLabelPlural.toLowerCase()}.
+						</p>
+					)}
+				</div>
+			</div>
+
+			<div className="space-y-2">
+				<label
+					htmlFor={`${normalizedTitle}-url`}
+					className="text-xs font-semibold tracking-wide text-muted-foreground uppercase"
+				>
+					URL
+				</label>
+				<div className="flex items-center gap-2">
+					<input
+						id={`${normalizedTitle}-url`}
+						type="text"
+						value={urlInputValue}
+						onChange={(event) => {
+							setManualUrlInputValue(event.target.value);
+						}}
+						onKeyDown={(event) => {
+							if (event.key === "Enter") {
+								event.preventDefault();
+								applyUrlToPreview();
+							}
+						}}
+						className="h-10 w-full rounded-lg border border-sidebar-border/70 bg-muted/40 px-3 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring dark:border-sidebar-border"
+					/>
+					<button
+						type="button"
+						onClick={applyUrlToPreview}
+						className="inline-flex h-10 shrink-0 items-center justify-center rounded-lg border border-sidebar-border/70 bg-background px-3 text-sm font-medium text-foreground transition-colors hover:bg-muted/60 dark:border-sidebar-border"
+					>
+						<ArrowRight className="size-4" aria-hidden="true" />
+						<span className="sr-only">Go</span>
+					</button>
+				</div>
+			</div>
+
+			<div className="relative flex-1 overflow-hidden rounded-xl border border-sidebar-border/70 bg-muted/20 dark:border-sidebar-border">
+				{selectedItem && activePreviewUrl !== "#" ? (
+					<iframe
+						src={activePreviewUrl}
+						title={`${selectedItem.label} preview`}
+						className="h-full min-h-80 w-full"
+					/>
+				) : (
+					<div className="flex h-full min-h-80 items-center justify-center p-6">
+						<div className="max-w-sm rounded-xl border border-dashed border-sidebar-border/70 bg-background/80 p-4 text-center dark:border-sidebar-border">
+							<p className={`text-sm font-medium ${accent}`}>
+								{previewAreaTitle}
+							</p>
+							<p className="mt-2 text-xs text-muted-foreground">
+								Selected: {selectedItem?.label}
+							</p>
+							<p className="mt-1 text-xs text-muted-foreground">
+								{previewHint}
+							</p>
+						</div>
+					</div>
+				)}
+			</div>
+		</section>
+	);
+}

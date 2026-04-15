@@ -1,6 +1,8 @@
 import { Head } from "@inertiajs/react";
-import { ArrowRight } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
+import { AccessDemoColumn } from "@/components/access-demo-column";
+import type { AccessDemoItem } from "@/lib/access-demo";
+import { ownerFromUserId } from "@/lib/access-demo";
 import { show as showInsecureInvoice } from "@/routes/insecure/invoices";
 import { index as invoices } from "@/routes/invoices";
 import { show as showSecureInvoice } from "@/routes/secure/invoices";
@@ -20,30 +22,10 @@ interface InvoicesIndexProps {
 	invoices: BackendInvoice[];
 }
 
-type DemoInvoice = {
-	id: number;
-	label: string;
-	owner: "User A" | "User B";
-	url: string;
-	previewUrl: string;
-};
-
-function ownerFromUserId(userId: number): DemoInvoice["owner"] | null {
-	if (userId === 1) {
-		return "User A";
-	}
-
-	if (userId === 2) {
-		return "User B";
-	}
-
-	return null;
-}
-
 function mapInvoicesToDemo(
 	serverInvoices: BackendInvoice[],
 	mode: "idor" | "secure",
-): DemoInvoice[] {
+): AccessDemoItem[] {
 	return serverInvoices
 		.map((invoice) => {
 			const owner = ownerFromUserId(invoice.user_id);
@@ -65,165 +47,7 @@ function mapInvoicesToDemo(
 				previewUrl: invoiceUrl,
 			};
 		})
-		.filter((invoice): invoice is DemoInvoice => invoice !== null);
-}
-
-function DemoColumn({
-	title,
-	description,
-	invoices,
-	accent,
-}: {
-	title: string;
-	description: string;
-	invoices: DemoInvoice[];
-	accent: string;
-}) {
-	const [selectedId, setSelectedId] = useState<number | null>(
-		invoices[0]?.id ?? null,
-	);
-	const [manualUrlInputValue, setManualUrlInputValue] = useState<string | null>(
-		null,
-	);
-	const [manualPreviewUrl, setManualPreviewUrl] = useState<string | null>(null);
-
-	const selectedInvoice = useMemo(
-		() => invoices.find((invoice) => invoice.id === selectedId) ?? invoices[0],
-		[invoices, selectedId],
-	);
-
-	const urlInputValue = manualUrlInputValue ?? selectedInvoice?.url ?? "";
-	const activePreviewUrl =
-		manualPreviewUrl ?? selectedInvoice?.previewUrl ?? "#";
-
-	const applyUrlToPreview = () => {
-		setManualPreviewUrl(urlInputValue.trim() || "#");
-	};
-
-	const groupedByOwner = useMemo(
-		() => ({
-			userA: invoices.filter((invoice) => invoice.owner === "User A"),
-			userB: invoices.filter((invoice) => invoice.owner === "User B"),
-		}),
-		[invoices],
-	);
-
-	return (
-		<section className="flex min-h-170 flex-col gap-4 rounded-2xl border border-sidebar-border/70 bg-background/95 p-4 shadow-sm dark:border-sidebar-border">
-			<div className="space-y-1">
-				<h2 className="text-xl font-semibold tracking-tight">{title}</h2>
-				<p className="text-sm text-muted-foreground">{description}</p>
-			</div>
-
-			<div className="grid gap-4 md:grid-cols-2">
-				<div className="space-y-2 rounded-xl border border-sidebar-border/70 p-3 dark:border-sidebar-border">
-					<h3 className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
-						User A Invoices
-					</h3>
-					{groupedByOwner.userA.length > 0 ? (
-						groupedByOwner.userA.map((invoice) => (
-							<button
-								key={invoice.id}
-								type="button"
-								onClick={() => {
-									setSelectedId(invoice.id);
-									setManualUrlInputValue(invoice.url);
-									setManualPreviewUrl(invoice.previewUrl);
-								}}
-								className="block text-left text-sm text-foreground underline decoration-dotted underline-offset-4 hover:text-primary"
-							>
-								{invoice.label}
-							</button>
-						))
-					) : (
-						<p className="text-sm text-muted-foreground">No invoices.</p>
-					)}
-				</div>
-
-				<div className="space-y-2 rounded-xl border border-sidebar-border/70 p-3 dark:border-sidebar-border">
-					<h3 className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
-						User B Invoices
-					</h3>
-					{groupedByOwner.userB.length > 0 ? (
-						groupedByOwner.userB.map((invoice) => (
-							<button
-								key={invoice.id}
-								type="button"
-								onClick={() => {
-									setSelectedId(invoice.id);
-									setManualUrlInputValue(invoice.url);
-									setManualPreviewUrl(invoice.previewUrl);
-								}}
-								className="block text-left text-sm text-foreground underline decoration-dotted underline-offset-4 hover:text-primary"
-							>
-								{invoice.label}
-							</button>
-						))
-					) : (
-						<p className="text-sm text-muted-foreground">No invoices.</p>
-					)}
-				</div>
-			</div>
-
-			<div className="space-y-2">
-				<label
-					htmlFor={`${title.replace(/\s+/g, "-").toLowerCase()}-url`}
-					className="text-xs font-semibold tracking-wide text-muted-foreground uppercase"
-				>
-					URL
-				</label>
-				<div className="flex items-center gap-2">
-					<input
-						id={`${title.replace(/\s+/g, "-").toLowerCase()}-url`}
-						type="text"
-						value={urlInputValue}
-						onChange={(event) => {
-							setManualUrlInputValue(event.target.value);
-						}}
-						onKeyDown={(event) => {
-							if (event.key === "Enter") {
-								event.preventDefault();
-								applyUrlToPreview();
-							}
-						}}
-						className="h-10 w-full rounded-lg border border-sidebar-border/70 bg-muted/40 px-3 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring dark:border-sidebar-border"
-					/>
-					<button
-						type="button"
-						onClick={applyUrlToPreview}
-						className="inline-flex h-10 shrink-0 items-center justify-center rounded-lg border border-sidebar-border/70 bg-background px-3 text-sm font-medium text-foreground transition-colors hover:bg-muted/60 dark:border-sidebar-border"
-					>
-						<ArrowRight className="size-4" aria-hidden="true" />
-						<span className="sr-only">Go</span>
-					</button>
-				</div>
-			</div>
-
-			<div className="relative flex-1 overflow-hidden rounded-xl border border-sidebar-border/70 bg-muted/20 dark:border-sidebar-border">
-				{selectedInvoice && activePreviewUrl !== "#" ? (
-					<iframe
-						src={activePreviewUrl}
-						title={`${selectedInvoice.label} preview`}
-						className="h-full min-h-80 w-full"
-					/>
-				) : (
-					<div className="flex h-full min-h-80 items-center justify-center p-6">
-						<div className="max-w-sm rounded-xl border border-dashed border-sidebar-border/70 bg-background/80 p-4 text-center dark:border-sidebar-border">
-							<p className={`text-sm font-medium ${accent}`}>
-								Invoice preview area
-							</p>
-							<p className="mt-2 text-xs text-muted-foreground">
-								Selected: {selectedInvoice?.label}
-							</p>
-							<p className="mt-1 text-xs text-muted-foreground">
-								Set each link to a real invoice URL when ready.
-							</p>
-						</div>
-					</div>
-				)}
-			</div>
-		</section>
-	);
+		.filter((invoice): invoice is AccessDemoItem => invoice !== null);
 }
 
 export default function InvoicesIndex({
@@ -254,18 +78,24 @@ export default function InvoicesIndex({
 				</div>
 
 				<div className="grid gap-4 xl:grid-cols-2">
-					<DemoColumn
+					<AccessDemoColumn
 						title="IDOR Demonstration"
-						description="Direct invoice references are shown without ownership-based filtering."
-						invoices={idorInvoices}
+						description="Direct invoice references are shown without authorisation checks."
+						items={idorInvoices}
 						accent="text-amber-700 dark:text-amber-300"
+						resourceLabelPlural="Invoices"
+						previewAreaTitle="Invoice preview area"
+						previewHint="Set each link to a real invoice URL when ready."
 					/>
 
-					<DemoColumn
+					<AccessDemoColumn
 						title="Secure Implementation"
-						description="Invoice access is represented with ownership-scoped references."
-						invoices={secureInvoices}
+						description="Invoice access is represented with authorisation checks."
+						items={secureInvoices}
 						accent="text-emerald-700 dark:text-emerald-300"
+						resourceLabelPlural="Invoices"
+						previewAreaTitle="Invoice preview area"
+						previewHint="Set each link to a real invoice URL when ready."
 					/>
 				</div>
 			</div>
