@@ -236,12 +236,7 @@ export default function TestsIndex({ result }: TestsIndexProps) {
 				) : null}
 
 				<div className="font-mono rounded-xl border border-sidebar-border/70 bg-background/80 p-4 dark:border-sidebar-border">
-					<div className="mb-3 flex items-center justify-between">
-						<h2 className="font-semibold uppercase tracking-wide text-muted-foreground">
-							Result
-						</h2>
-					</div>
-
+					
 					{result && suites.length > 0 ? (
 						<div className="space-y-4">
 							{suites.map((suite) => (
@@ -306,7 +301,7 @@ export default function TestsIndex({ result }: TestsIndexProps) {
 						</div>
 					) : (
 						<p className="text-sm text-muted-foreground">
-							Run tests to see results here.
+							Run tests to see the results here.
 						</p>
 					)}
 				</div>
