@@ -1,8 +1,9 @@
-import { ArrowRight } from "lucide-react";
+import { AlertTriangle, ArrowRight, ShieldCheck } from "lucide-react";
 import { useMemo, useState } from "react";
 import type { AccessDemoItem } from "@/lib/access-demo";
 
 interface AccessDemoColumnProps {
+	type: "insecure" | "secure";
 	title: string;
 	description: string;
 	items: AccessDemoItem[];
@@ -13,6 +14,7 @@ interface AccessDemoColumnProps {
 }
 
 export function AccessDemoColumn({
+	type,
 	title,
 	description,
 	items,
@@ -50,11 +52,27 @@ export function AccessDemoColumn({
 	);
 
 	const normalizedTitle = title.replace(/\s+/g, "-").toLowerCase();
+	const isSecure = type === "secure";
+	const TypeIcon = isSecure ? ShieldCheck : AlertTriangle;
+	const titleIconClassName = isSecure
+		? "text-emerald-700 dark:text-emerald-300"
+		: "text-amber-700 dark:text-amber-300";
+	const sectionBorderClassName = isSecure
+		? "border-emerald-300/80 dark:border-emerald-800/70"
+		: "border-amber-300/80 dark:border-amber-800/70";
 
 	return (
-		<section className="flex min-h-170 flex-col gap-4 rounded-2xl border border-sidebar-border/70 bg-background/95 p-4 shadow-sm dark:border-sidebar-border">
+		<section
+			className={`flex min-h-170 flex-col gap-4 rounded-2xl border bg-background/95 p-4 shadow-sm ${sectionBorderClassName}`}
+		>
 			<div className="space-y-1">
-				<h2 className="text-xl font-semibold tracking-tight">{title}</h2>
+				<h2 className="flex items-center gap-2 text-xl font-semibold tracking-tight">
+					<TypeIcon
+						className={`size-5 ${titleIconClassName}`}
+						aria-hidden="true"
+					/>
+					<span>{title}</span>
+				</h2>
 				<p className="text-sm text-muted-foreground">{description}</p>
 			</div>
 

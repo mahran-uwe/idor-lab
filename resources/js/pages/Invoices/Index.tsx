@@ -79,6 +79,7 @@ export default function InvoicesIndex({
 
 				<div className="grid gap-4 xl:grid-cols-2">
 					<AccessDemoColumn
+						type="insecure"
 						title="IDOR Demonstration"
 						description="Direct invoice references are shown without authorisation checks."
 						items={idorInvoices}
@@ -89,6 +90,7 @@ export default function InvoicesIndex({
 					/>
 
 					<AccessDemoColumn
+						type="secure"
 						title="Secure Implementation"
 						description="Invoice access is represented with authorisation checks."
 						items={secureInvoices}

@@ -74,6 +74,7 @@ export default function DocumentsIndex({
 
 				<div className="grid gap-4 xl:grid-cols-2">
 					<AccessDemoColumn
+						type="insecure"
 						title="IDOR Demonstration"
 						description="Direct object references are shown without authorisation checks."
 						items={idorDocuments}
@@ -84,6 +85,7 @@ export default function DocumentsIndex({
 					/>
 
 					<AccessDemoColumn
+						type="secure"
 						title="Secure Implementation"
 						description="Document access is represented with authorisation checks."
 						items={secureDocuments}
