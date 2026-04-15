@@ -62,7 +62,7 @@ export default function UUIDIndex({
 
 	return (
 		<>
-			<Head title="UUID Access Demo" />
+			<Head title="UUIDs" />
 
 			<div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
 				<div className="space-y-1">

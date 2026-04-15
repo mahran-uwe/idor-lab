@@ -64,7 +64,7 @@ export default function InvoicesApi({
 
 	return (
 		<>
-			<Head title="API Demo" />
+			<Head title="API" />
 
 			<div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
 				<div className="space-y-1">
