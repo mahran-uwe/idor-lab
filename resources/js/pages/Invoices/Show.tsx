@@ -1,5 +1,4 @@
-import { Head, Link } from "@inertiajs/react";
-import { index as invoices } from "@/routes/invoices";
+import { Head } from "@inertiajs/react";
 
 type InvoiceItem = {
 	id: number;
@@ -92,12 +91,6 @@ export default function InvoicesShow({ invoice }: InvoiceShowProps) {
 						>
 							{statusLabel(invoice.status)}
 						</span>
-						<Link
-							href={invoices()}
-							className="inline-flex items-center rounded-lg border border-sidebar-border/70 px-3 py-2 text-sm font-medium text-foreground hover:bg-muted/60 dark:border-sidebar-border"
-						>
-							Back to Invoices
-						</Link>
 					</div>
 				</div>
 
