@@ -7,6 +7,7 @@ use App\Http\Controllers\InsecureInvoiceController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\SecureDocumentController;
 use App\Http\Controllers\SecureInvoiceController;
+use App\Http\Controllers\TestController;
 use App\Http\Controllers\UUIDController;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -23,6 +24,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('invoices', InvoiceController::class)->name('invoices.index');
     Route::get('uuid', UUIDController::class)->name('uuid.index');
     Route::get('api/invoices', APIController::class)->name('api.index');
+    Route::get('tests', TestController::class)->name('tests.index');
 
     Route::prefix('insecure')->name('insecure.')->group(function () {
         Route::resource('documents', InsecureDocumentController::class)->only('show');

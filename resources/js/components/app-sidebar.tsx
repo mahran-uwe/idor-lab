@@ -5,6 +5,7 @@ import {
 	ReceiptText,
 	ScanBarcode,
 	Server,
+	Terminal,
 } from "lucide-react";
 import AppLogo from "@/components/app-logo";
 import { NavFooter } from "@/components/nav-footer";
@@ -20,9 +21,10 @@ import {
 	SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { dashboard } from "@/routes";
+import { index as api } from "@/routes/api";
 import { index as documents } from "@/routes/documents";
 import { index as invoices } from "@/routes/invoices";
-import { index as api } from "@/routes/api";
+import { index as tests } from "@/routes/tests";
 import type { NavItem } from "@/types";
 
 const mainNavItems: NavItem[] = [
@@ -50,6 +52,11 @@ const mainNavItems: NavItem[] = [
 		title: "API",
 		href: api(),
 		icon: Server,
+	},
+	{
+		title: "Tests",
+		href: tests(),
+		icon: Terminal,
 	},
 ];
 
