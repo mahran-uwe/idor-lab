@@ -37,6 +37,10 @@ class SecureDocumentController extends Controller
      */
     public function show(Document $document)
     {
+        if ($uuid = request()->route('uuid')) {
+            $document = Document::where('uuid', $uuid)->firstOrFail();
+        }
+
         Gate::authorize('view', $document);
 
         $response = response()->file($document->path);

@@ -36,6 +36,11 @@ class InsecureDocumentController extends Controller
      */
     public function show(Document $document)
     {
+        if ($uuid = request()->route('uuid'))
+        {
+            $document = Document::where('uuid', $uuid)->firstOrFail();
+        }
+
         return response()->file($document->path);
     }
 
