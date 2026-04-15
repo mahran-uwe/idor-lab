@@ -1,5 +1,11 @@
 import { Link } from "@inertiajs/react";
-import { File, LayoutGrid, ReceiptText, ScanBarcode } from "lucide-react";
+import {
+	File,
+	LayoutGrid,
+	ReceiptText,
+	ScanBarcode,
+	Server,
+} from "lucide-react";
 import AppLogo from "@/components/app-logo";
 import { NavFooter } from "@/components/nav-footer";
 import { NavMain } from "@/components/nav-main";
@@ -16,6 +22,7 @@ import {
 import { dashboard } from "@/routes";
 import { index as documents } from "@/routes/documents";
 import { index as invoices } from "@/routes/invoices";
+import { index as invoicesApi } from "@/routes/invoices/api";
 import type { NavItem } from "@/types";
 
 const mainNavItems: NavItem[] = [
@@ -38,7 +45,12 @@ const mainNavItems: NavItem[] = [
 		title: "UUIDs",
 		href: "/uuid",
 		icon: ScanBarcode,
-	}
+	},
+	{
+		title: "API",
+		href: invoicesApi(),
+		icon: Server,
+	},
 ];
 
 const footerNavItems: NavItem[] = [];
