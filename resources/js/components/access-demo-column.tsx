@@ -1,6 +1,6 @@
 import { AlertTriangle, ArrowRight, ShieldCheck } from "lucide-react";
 import { useMemo, useState } from "react";
-import type { AccessDemoItem } from "@/lib/access-demo";
+import type { AccessDemoItem, DemoOwner } from "@/lib/access-demo";
 
 interface AccessDemoColumnProps {
 	type: "insecure" | "secure";
@@ -9,6 +9,7 @@ interface AccessDemoColumnProps {
 	items: AccessDemoItem[];
 	accent: string;
 	resourceLabelPlural: string;
+	prioritizeOwner?: DemoOwner | null;
 	previewAreaTitle: string;
 	previewHint: string;
 }
@@ -20,6 +21,7 @@ export function AccessDemoColumn({
 	items,
 	accent,
 	resourceLabelPlural,
+	prioritizeOwner,
 	previewAreaTitle,
 	previewHint,
 }: AccessDemoColumnProps) {
@@ -51,6 +53,40 @@ export function AccessDemoColumn({
 		[items],
 	);
 
+	const ownerSections = useMemo(() => {
+		const sections = [
+			{ owner: "User A" as const, items: groupedByOwner.userA },
+			{ owner: "User B" as const, items: groupedByOwner.userB },
+		];
+
+		if (!prioritizeOwner) {
+			return sections.map((section) => ({
+				...section,
+				heading: `${section.owner} ${resourceLabelPlural}`,
+			}));
+		}
+
+		const ordered = sections.sort((left, right) => {
+			if (left.owner === prioritizeOwner) {
+				return -1;
+			}
+
+			if (right.owner === prioritizeOwner) {
+				return 1;
+			}
+
+			return 0;
+		});
+
+		return ordered.map((section) => ({
+			...section,
+			heading:
+				section.owner === prioritizeOwner
+					? `My ${resourceLabelPlural}`
+					: `${section.owner} ${resourceLabelPlural}`,
+		}));
+	}, [groupedByOwner.userA, groupedByOwner.userB, prioritizeOwner, resourceLabelPlural]);
+
 	const normalizedTitle = title.replace(/\s+/g, "-").toLowerCase();
 	const isSecure = type === "secure";
 	const TypeIcon = isSecure ? ShieldCheck : AlertTriangle;
@@ -77,57 +113,36 @@ export function AccessDemoColumn({
 			</div>
 
 			<div className="grid gap-4 md:grid-cols-2">
-				<div className="space-y-2 rounded-xl border border-sidebar-border/70 p-3 dark:border-sidebar-border">
-					<h3 className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
-						User A {resourceLabelPlural}
-					</h3>
-					{groupedByOwner.userA.length > 0 ? (
-						groupedByOwner.userA.map((item) => (
-							<button
-								key={item.id}
-								type="button"
-								onClick={() => {
-									setSelectedId(item.id);
-									setManualUrlInputValue(item.url);
-									setManualPreviewUrl(item.previewUrl);
-								}}
-								className="block text-left text-sm text-foreground underline decoration-dotted underline-offset-4 hover:text-primary"
-							>
-								{item.label}
-							</button>
-						))
-					) : (
-						<p className="text-sm text-muted-foreground">
-							No {resourceLabelPlural.toLowerCase()}.
-						</p>
-					)}
-				</div>
-
-				<div className="space-y-2 rounded-xl border border-sidebar-border/70 p-3 dark:border-sidebar-border">
-					<h3 className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
-						User B {resourceLabelPlural}
-					</h3>
-					{groupedByOwner.userB.length > 0 ? (
-						groupedByOwner.userB.map((item) => (
-							<button
-								key={item.id}
-								type="button"
-								onClick={() => {
-									setSelectedId(item.id);
-									setManualUrlInputValue(item.url);
-									setManualPreviewUrl(item.previewUrl);
-								}}
-								className="block text-left text-sm text-foreground underline decoration-dotted underline-offset-4 hover:text-primary"
-							>
-								{item.label}
-							</button>
-						))
-					) : (
-						<p className="text-sm text-muted-foreground">
-							No {resourceLabelPlural.toLowerCase()}.
-						</p>
-					)}
-				</div>
+				{ownerSections.map((section) => (
+					<div
+						key={section.owner}
+						className="space-y-2 rounded-xl border border-sidebar-border/70 p-3 dark:border-sidebar-border"
+					>
+						<h3 className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+							{section.heading}
+						</h3>
+						{section.items.length > 0 ? (
+							section.items.map((item) => (
+								<button
+									key={item.id}
+									type="button"
+									onClick={() => {
+										setSelectedId(item.id);
+										setManualUrlInputValue(item.url);
+										setManualPreviewUrl(item.previewUrl);
+									}}
+									className="block text-left text-sm text-foreground underline decoration-dotted underline-offset-4 hover:text-primary"
+								>
+									{item.label}
+								</button>
+							))
+						) : (
+							<p className="text-sm text-muted-foreground">
+								No {resourceLabelPlural.toLowerCase()}.
+							</p>
+						)}
+					</div>
+				))}
 			</div>
 
 			<div className="space-y-2">

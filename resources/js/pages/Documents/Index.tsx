@@ -1,4 +1,4 @@
-import { Head } from "@inertiajs/react";
+import { Head, usePage } from "@inertiajs/react";
 import { useMemo } from "react";
 import { AccessDemoColumn } from "@/components/access-demo-column";
 import type { AccessDemoItem } from "@/lib/access-demo";
@@ -48,6 +48,9 @@ function mapDocumentsToDemo(
 export default function DocumentsIndex({
 	documents: serverDocuments,
 }: DocumentsIndexProps) {
+	const { auth } = usePage().props;
+	const prioritizedOwner = ownerFromUserId(auth.user.id);
+
 	const idorDocuments = useMemo(
 		() => mapDocumentsToDemo(serverDocuments, "idor"),
 		[serverDocuments],
@@ -78,6 +81,7 @@ export default function DocumentsIndex({
 						title="IDOR Demonstration"
 						description="Direct object references are shown without authorisation checks."
 						items={idorDocuments}
+						prioritizeOwner={prioritizedOwner}
 						accent="text-amber-700 dark:text-amber-300"
 						resourceLabelPlural="Documents"
 						previewAreaTitle="PDF preview area"
@@ -89,6 +93,7 @@ export default function DocumentsIndex({
 						title="Secure Implementation"
 						description="Document access is represented with authorisation checks."
 						items={secureDocuments}
+						prioritizeOwner={prioritizedOwner}
 						accent="text-emerald-700 dark:text-emerald-300"
 						resourceLabelPlural="Documents"
 						previewAreaTitle="PDF preview area"
