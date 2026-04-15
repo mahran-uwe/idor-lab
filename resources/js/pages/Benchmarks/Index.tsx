@@ -174,7 +174,7 @@ export default function BenchmarksIndex({
 				<div className="flex items-start justify-between gap-4">
 					<div className="space-y-1">
 						<h1 className="text-2xl font-bold tracking-tight">
-							Benchmark Dashboard
+							Benchmarks
 						</h1>
 						<p className="text-sm text-muted-foreground">
 							Run authorization benchmark comparisons and visualize latency
