@@ -39,7 +39,6 @@ class DocumentSeeder extends Seeder
                 ['id' => $firstDocumentId],
                 [
                     'title' => 'Document 1',
-                    'uuid' => Str::uuid(),
                     'path' => storage_path('app/demo/documents/Sample Document.pdf'),
                 ],
             );
@@ -48,7 +47,6 @@ class DocumentSeeder extends Seeder
                 ['id' => $secondDocumentId],
                 [
                     'title' => 'Document 2',
-                    'uuid' => Str::uuid(),
                     'path' => storage_path('app/demo/documents/Sample Document.pdf'),
                 ],
             );
