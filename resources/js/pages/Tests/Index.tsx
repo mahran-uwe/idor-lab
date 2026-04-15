@@ -74,6 +74,62 @@ export default function TestsIndex({ result }: TestsIndexProps) {
 		return Array.from(suitesMap.values());
 	}, [result]);
 
+	const summary = useMemo(() => {
+		if (!result) {
+			return {
+				testsLine: null as string | null,
+				durationLine: null as string | null,
+				testsLineSegments: [] as {
+					key: string;
+					text: string;
+					kind: "passed" | "failed" | "plain";
+				}[],
+			};
+		}
+
+		const lines = result.output.split(/\r?\n/).map((line) => line.trim());
+		const testsLine = lines.find((line) => line.startsWith("Tests:")) ?? null;
+		const durationLine =
+			lines.find((line) => line.startsWith("Duration:")) ?? null;
+
+		const testsLineSegments: {
+			key: string;
+			text: string;
+			kind: "passed" | "failed" | "plain";
+		}[] = [];
+
+		if (testsLine) {
+			const segmentCounts = new Map<string, number>();
+			const segments = testsLine
+				.split(/(\d+\s+passed|\d+\s+failed)/gi)
+				.filter((segment) => segment.length > 0);
+
+			for (const segment of segments) {
+				const kind = /\d+\s+passed/i.test(segment)
+					? "passed"
+					: /\d+\s+failed/i.test(segment)
+						? "failed"
+						: "plain";
+
+				const baseKey = `${kind}:${segment}`;
+				const nextCount = (segmentCounts.get(baseKey) ?? 0) + 1;
+				segmentCounts.set(baseKey, nextCount);
+
+				testsLineSegments.push({
+					key: `${baseKey}:${nextCount}`,
+					text: segment,
+					kind,
+				});
+			}
+		}
+
+		return {
+			testsLine,
+			durationLine,
+			testsLineSegments,
+		};
+	}, [result]);
+
 	const onSubmit = (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		setIsRunning(true);
@@ -92,28 +148,71 @@ export default function TestsIndex({ result }: TestsIndexProps) {
 
 	return (
 		<>
-			<Head title="Test Runner" />
+			<Head title="Automated Tests" />
 
 			<div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
-				<div className="space-y-1">
-					<h1 className="text-2xl font-bold tracking-tight">Test Runner</h1>
-					<p className="text-sm text-muted-foreground">
-						Run the full test suite and review each test with a pass/fail badge.
-					</p>
+				<div className="flex items-start justify-between gap-3">
+					<div className="space-y-1">
+						<h1 className="text-2xl font-bold tracking-tight">
+							Automated Tests
+						</h1>
+						<p className="text-sm text-muted-foreground">
+							Run automated tests to verify that the IDOR prevention mechanisms
+							are working as expected.
+						</p>
+						<p className="text-sm text-muted-foreground"></p>
+					</div>
+
+					<form onSubmit={onSubmit}>
+						<button
+							type="submit"
+							disabled={isRunning}
+							className="inline-flex h-10 items-center justify-center rounded-lg border border-sidebar-border/70 bg-background px-4 text-sm font-medium text-foreground transition-colors hover:bg-muted/60 disabled:cursor-not-allowed disabled:opacity-60 dark:border-sidebar-border"
+						>
+							{isRunning ? "Running..." : "Run Tests"}
+						</button>
+					</form>
 				</div>
 
-				<form
-					onSubmit={onSubmit}
-					className="rounded-xl border border-sidebar-border/70 bg-background/80 p-4 dark:border-sidebar-border"
-				>
-					<button
-						type="submit"
-						disabled={isRunning}
-						className="inline-flex h-10 items-center justify-center rounded-lg border border-sidebar-border/70 bg-background px-4 text-sm font-medium text-foreground transition-colors hover:bg-muted/60 disabled:cursor-not-allowed disabled:opacity-60 dark:border-sidebar-border"
-					>
-						{isRunning ? "Running..." : "Run Tests"}
-					</button>
-				</form>
+				{result ? (
+					<div className="rounded-xl border border-sidebar-border/70 bg-background/80 p-4 dark:border-sidebar-border">
+						<h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+							Summary
+						</h2>
+						<div className="space-y-1 text-sm text-foreground">
+							<p className="whitespace-pre-wrap">
+								{summary.testsLine
+									? summary.testsLineSegments.map((segment) => {
+											if (segment.kind === "passed") {
+												return (
+													<span
+														key={segment.key}
+														className="font-bold text-emerald-700 dark:text-emerald-300"
+													>
+														{segment.text}
+													</span>
+												);
+											}
+
+											if (segment.kind === "failed") {
+												return (
+													<span
+														key={segment.key}
+														className="font-bold text-rose-700 dark:text-rose-300"
+													>
+														{segment.text}
+													</span>
+												);
+											}
+
+											return <span key={segment.key}>{segment.text}</span>;
+										})
+									: `Tests:    ${result.status} (exit ${result.exit_code})`}
+							</p>
+							<p>{summary.durationLine ?? "Duration: N/A"}</p>
+						</div>
+					</div>
+				) : null}
 
 				<div className="rounded-xl border border-sidebar-border/70 bg-background/80 p-4 dark:border-sidebar-border">
 					<div className="mb-3 flex items-center justify-between">
@@ -191,7 +290,7 @@ export default function TestsIndex({ result }: TestsIndexProps) {
 TestsIndex.layout = {
 	breadcrumbs: [
 		{
-			title: "Test Runner",
+			title: "Automated Tests",
 			href: tests(),
 		},
 	],
