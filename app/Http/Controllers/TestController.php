@@ -2,22 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class TestController extends Controller
 {
-    public function __invoke(Request $request): Response
+    private const RESULT_FILE_PATH = 'test-results/latest.json';
+
+    public function __invoke(Request $request): Response|RedirectResponse
     {
         $validated = $request->validate([
             'run' => ['nullable', 'boolean'],
         ]);
 
         $shouldRun = (bool) ($validated['run'] ?? false);
-        $result = null;
-
         if ($shouldRun) {
             $parameters = [
                 '--without-tty' => true,
@@ -46,10 +48,23 @@ class TestController extends Controller
                 'output' => $output,
                 'tests' => $this->parseTestsFromOutput($output),
             ];
+
+            Storage::disk('local')->put(self::RESULT_FILE_PATH, json_encode($result, JSON_PRETTY_PRINT));
+
+            return to_route('tests.index');
+        }
+
+        $storedResult = null;
+        if (Storage::disk('local')->exists(self::RESULT_FILE_PATH)) {
+            $decodedResult = json_decode((string) Storage::disk('local')->get(self::RESULT_FILE_PATH), true);
+
+            if (is_array($decodedResult)) {
+                $storedResult = $decodedResult;
+            }
         }
 
         return Inertia::render('Tests/Index', [
-            'result' => $result,
+            'result' => $storedResult,
         ]);
     }
 
