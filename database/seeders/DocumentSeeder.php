@@ -35,11 +35,15 @@ class DocumentSeeder extends Seeder
             $firstDocumentId = $firstSeededId + ($userIndex * 2);
             $secondDocumentId = $firstDocumentId + 1;
 
+            $emailPrefix = Str::before($user->email, '@');
+            $documentSuffix = Str::after($emailPrefix, '.');
+            $documentSuffix = Str::upper(Str::substr($documentSuffix, 0, 1));
+
             $user->documents()->updateOrCreate(
                 ['id' => $firstDocumentId],
                 [
                     'title' => 'Document 1',
-                    'path' => storage_path('app/demo/documents/Sample Document.pdf'),
+                    'path' => storage_path('app/demo/documents/Document 1' . $documentSuffix . '.pdf'),
                 ],
             );
 
@@ -47,7 +51,7 @@ class DocumentSeeder extends Seeder
                 ['id' => $secondDocumentId],
                 [
                     'title' => 'Document 2',
-                    'path' => storage_path('app/demo/documents/Sample Document.pdf'),
+                    'path' => storage_path('app/demo/documents/Document 2' . $documentSuffix . '.pdf'),
                 ],
             );
         }
