@@ -1,6 +1,6 @@
 import { Link } from "@inertiajs/react";
 import {
-	BarChart3,
+	ChartBar,
 	File,
 	LayoutGrid,
 	ReceiptText,
@@ -70,7 +70,7 @@ const mainNavItems: NavItem[] = [
 	{
 		title: "Benchmarks",
 		href: benchmarks(),
-		icon: BarChart3,
+		icon: ChartBar,
 	},
 ];
 
