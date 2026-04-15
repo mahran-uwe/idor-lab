@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Models\Invoice;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class InsecureInvoiceApiController extends Controller
+class InsecureInvoiceController extends Controller
 {
     /**
      * Handle the incoming request.

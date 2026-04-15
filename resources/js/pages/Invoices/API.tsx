@@ -3,9 +3,9 @@ import { useMemo } from "react";
 import { AccessDemoColumn } from "@/components/access-demo-column";
 import type { AccessDemoItem } from "@/lib/access-demo";
 import { ownerFromUserId } from "@/lib/access-demo";
-import { show as showInsecureInvoiceApi } from "@/routes/api/insecure/invoices";
-import { show as showSecureInvoiceApi } from "@/routes/api/secure/invoices";
-import { index as invoiceApiDemo } from "@/routes/invoices/api";
+import { show as showInsecureInvoice } from "@/routes/api/insecure/invoices";
+import { show as showSecureInvoice } from "@/routes/api/secure/invoices";
+import { index as api } from "@/routes/api";
 
 type BackendInvoice = {
 	id: number;
@@ -34,8 +34,8 @@ function mapInvoicesToDemo(
 
 			const apiUrl =
 				mode === "secure"
-					? showSecureInvoiceApi.url(invoice.invoice_number)
-					: showInsecureInvoiceApi.url(invoice.invoice_number);
+					? showSecureInvoice.url(invoice.invoice_number)
+					: showInsecureInvoice.url(invoice.invoice_number);
 
 			return {
 				id: invoice.id,
@@ -108,7 +108,7 @@ InvoicesApi.layout = {
 	breadcrumbs: [
 		{
 			title: "Invoice API Demo",
-			href: invoiceApiDemo(),
+			href: api(),
 		},
 	],
 };

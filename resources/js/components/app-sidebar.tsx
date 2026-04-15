@@ -22,7 +22,7 @@ import {
 import { dashboard } from "@/routes";
 import { index as documents } from "@/routes/documents";
 import { index as invoices } from "@/routes/invoices";
-import { index as invoicesApi } from "@/routes/invoices/api";
+import { index as api } from "@/routes/api";
 import type { NavItem } from "@/types";
 
 const mainNavItems: NavItem[] = [
@@ -48,7 +48,7 @@ const mainNavItems: NavItem[] = [
 	},
 	{
 		title: "API",
-		href: invoicesApi(),
+		href: api(),
 		icon: Server,
 	},
 ];

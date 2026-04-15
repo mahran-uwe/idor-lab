@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Invoice;
 use Illuminate\Http\Request;
 
-class InvoiceApiDemoController extends Controller
+class APIController extends Controller
 {
     /**
      * Handle the incoming request.
