@@ -3,8 +3,6 @@ import { useMemo } from "react";
 import { AccessDemoColumn } from "@/components/access-demo-column";
 import type { AccessDemoItem } from "@/lib/access-demo";
 import { ownerFromUserId } from "@/lib/access-demo";
-import { show as showInsecureInvoice } from "@/routes/api/insecure/invoices";
-import { show as showSecureInvoice } from "@/routes/api/secure/invoices";
 import { index as api } from "@/routes/api";
 
 type BackendInvoice = {
@@ -32,10 +30,11 @@ function mapInvoicesToDemo(
 				return null;
 			}
 
+			const encodedInvoiceNumber = encodeURIComponent(invoice.invoice_number);
 			const apiUrl =
 				mode === "secure"
-					? showSecureInvoice.url(invoice.invoice_number)
-					: showInsecureInvoice.url(invoice.invoice_number);
+					? `/api/secure/invoices/${encodedInvoiceNumber}`
+					: `/api/insecure/invoices/${encodedInvoiceNumber}`;
 
 			return {
 				id: invoice.id,
@@ -48,7 +47,9 @@ function mapInvoicesToDemo(
 		.filter((invoice): invoice is AccessDemoItem => invoice !== null);
 }
 
-export default function InvoicesApi({ invoices: serverInvoices }: InvoicesApiProps) {
+export default function InvoicesApi({
+	invoices: serverInvoices,
+}: InvoicesApiProps) {
 	const { auth } = usePage().props;
 	const prioritizedOwner = ownerFromUserId(auth.user.id);
 
@@ -69,8 +70,8 @@ export default function InvoicesApi({ invoices: serverInvoices }: InvoicesApiPro
 				<div className="space-y-1">
 					<h1 className="text-2xl font-bold tracking-tight">API Demo</h1>
 					<p className="text-sm text-muted-foreground">
-						Compare insecure and secure invoice API endpoints. The secure endpoint enforces
-						authorization.
+						Compare insecure and secure invoice API endpoints. The secure
+						endpoint enforces authorization.
 					</p>
 				</div>
 

@@ -9,7 +9,7 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::name('api.')->middleware('auth:sanctum')->group(function () {
 
     Route::prefix('insecure')->name('insecure.')->group(function () {
         Route::get('invoices/{invoice:invoice_number}', InsecureInvoiceController::class)
@@ -20,4 +20,5 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('invoices/{invoice:invoice_number}', SecureInvoiceController::class)
             ->name('invoices.show');
     });
+    
 });
