@@ -1,5 +1,6 @@
 import { AlertTriangle, ArrowRight, ShieldCheck } from "lucide-react";
 import { useMemo, useState } from "react";
+import { LiveLoadTime } from "@/components/live-load-time";
 import type { AccessDemoItem, DemoOwner } from "@/lib/access-demo";
 
 interface AccessDemoColumnProps {
@@ -28,10 +29,17 @@ export function AccessDemoColumn({
 	const [selectedId, setSelectedId] = useState<number | null>(
 		items[0]?.id ?? null,
 	);
+	const initialPreviewUrl = items[0]?.previewUrl ?? "#";
+	const hasInitialPreview = initialPreviewUrl !== "#";
 	const [manualUrlInputValue, setManualUrlInputValue] = useState<string | null>(
 		null,
 	);
-	const [manualPreviewUrl, setManualPreviewUrl] = useState<string | null>(null);
+	const [manualPreviewUrl, setManualPreviewUrl] = useState<string | null>(
+		hasInitialPreview ? initialPreviewUrl : null,
+	);
+	const [loadStartedAt, setLoadStartedAt] = useState<number | null>(null);
+	const [loadDurationMs, setLoadDurationMs] = useState<number | null>(null);
+	const [isLoading, setIsLoading] = useState(false);
 
 	const selectedItem = useMemo(
 		() => items.find((item) => item.id === selectedId) ?? items[0],
@@ -41,8 +49,29 @@ export function AccessDemoColumn({
 	const urlInputValue = manualUrlInputValue ?? selectedItem?.url ?? "";
 	const activePreviewUrl = manualPreviewUrl ?? selectedItem?.previewUrl ?? "#";
 
-	const applyUrlToPreview = () => {
-		setManualPreviewUrl(urlInputValue.trim() || "#");
+	const startPreviewLoad = (
+		nextPreviewUrl: string,
+		startedAt: number | null,
+	) => {
+		const normalizedPreviewUrl = nextPreviewUrl.trim() || "#";
+
+		setManualPreviewUrl(normalizedPreviewUrl);
+
+		if (normalizedPreviewUrl === "#") {
+			setIsLoading(false);
+			setLoadStartedAt(null);
+			setLoadDurationMs(null);
+
+			return;
+		}
+
+		setLoadStartedAt(startedAt);
+		setLoadDurationMs(null);
+		setIsLoading(startedAt !== null);
+	};
+
+	const applyUrlToPreview = (startedAt: number | null) => {
+		startPreviewLoad(urlInputValue, startedAt);
 	};
 
 	const groupedByOwner = useMemo(
@@ -138,10 +167,10 @@ export function AccessDemoColumn({
 								<button
 									key={item.id}
 									type="button"
-									onClick={() => {
+									onClick={(event) => {
 										setSelectedId(item.id);
 										setManualUrlInputValue(item.url);
-										setManualPreviewUrl(item.previewUrl);
+										startPreviewLoad(item.previewUrl, event.timeStamp);
 									}}
 									className="block text-left text-sm text-foreground underline decoration-dotted underline-offset-4 hover:text-primary"
 								>
@@ -175,14 +204,16 @@ export function AccessDemoColumn({
 						onKeyDown={(event) => {
 							if (event.key === "Enter") {
 								event.preventDefault();
-								applyUrlToPreview();
+								applyUrlToPreview(event.timeStamp);
 							}
 						}}
 						className="h-10 w-full rounded-lg border border-sidebar-border/70 bg-muted/40 px-3 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring dark:border-sidebar-border"
 					/>
 					<button
 						type="button"
-						onClick={applyUrlToPreview}
+						onClick={(event) => {
+							applyUrlToPreview(event.timeStamp);
+						}}
 						className="inline-flex h-10 shrink-0 items-center justify-center rounded-lg border border-sidebar-border/70 bg-background px-3 text-sm font-medium text-foreground transition-colors hover:bg-muted/60 dark:border-sidebar-border"
 					>
 						<ArrowRight className="size-4" aria-hidden="true" />
@@ -192,11 +223,25 @@ export function AccessDemoColumn({
 			</div>
 
 			<div className="relative flex-1 overflow-hidden rounded-xl border border-sidebar-border/70 bg-muted/20 dark:border-sidebar-border">
+				<div className="absolute top-2 right-2 z-10">
+					<LiveLoadTime isLoading={isLoading} loadDurationMs={loadDurationMs} />
+				</div>
 				{selectedItem && activePreviewUrl !== "#" ? (
 					<iframe
 						src={activePreviewUrl}
 						title={`${selectedItem.label} preview`}
 						className="h-full min-h-80 w-full"
+						onLoad={(event) => {
+							if (loadStartedAt === null) {
+								setIsLoading(false);
+
+								return;
+							}
+
+							setLoadDurationMs(event.timeStamp - loadStartedAt);
+							setLoadStartedAt(null);
+							setIsLoading(false);
+						}}
 					/>
 				) : (
 					<div className="flex h-full min-h-80 items-center justify-center p-6">
