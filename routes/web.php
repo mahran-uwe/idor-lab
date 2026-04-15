@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\APIController;
 use App\Http\Controllers\AuthorizationModelController;
+use App\Http\Controllers\BenchmarkController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\InsecureDocumentController;
 use App\Http\Controllers\InsecureInvoiceController;
@@ -26,6 +27,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('uuid', UUIDController::class)->name('uuid.index');
     Route::get('api/invoices', APIController::class)->name('api.index');
     Route::get('authorization-model', AuthorizationModelController::class)->name('authorization-model.index');
+    Route::get('benchmarks', BenchmarkController::class)->name('benchmarks.index');
     Route::get('tests', TestController::class)->name('tests.index');
 
     Route::prefix('insecure')->name('insecure.')->group(function () {

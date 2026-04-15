@@ -1,5 +1,6 @@
 import { Link } from "@inertiajs/react";
 import {
+	BarChart3,
 	File,
 	LayoutGrid,
 	ReceiptText,
@@ -24,6 +25,7 @@ import {
 import { dashboard } from "@/routes";
 import { index as api } from "@/routes/api";
 import { index as authorizationModel } from "@/routes/authorization-model";
+import { index as benchmarks } from "@/routes/benchmarks";
 import { index as documents } from "@/routes/documents";
 import { index as invoices } from "@/routes/invoices";
 import { index as tests } from "@/routes/tests";
@@ -64,6 +66,11 @@ const mainNavItems: NavItem[] = [
 		title: "Tests",
 		href: tests(),
 		icon: Terminal,
+	},
+	{
+		title: "Benchmarks",
+		href: benchmarks(),
+		icon: BarChart3,
 	},
 ];
 
