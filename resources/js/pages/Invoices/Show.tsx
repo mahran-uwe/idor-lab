@@ -101,13 +101,13 @@ export default function InvoicesShow({ invoice }: InvoiceShowProps) {
 						</div>
 
 						<div className="overflow-x-auto">
-							<table className="w-full min-w-140 text-left text-sm">
-								<thead className="bg-muted/50 text-xs tracking-wide text-muted-foreground uppercase">
+							<table className="w-full min-w-120 text-left text-sm">
+								<thead className="bg-muted/50 text-[11px] tracking-wide text-muted-foreground uppercase">
 									<tr>
-										<th className="px-5 py-3 font-semibold">Item</th>
-										<th className="px-5 py-3 font-semibold">Qty</th>
-										<th className="px-5 py-3 font-semibold">Unit Price</th>
-										<th className="px-5 py-3 font-semibold">Line Total</th>
+										<th className="px-4 py-2.5 font-semibold">Item</th>
+										<th className="px-4 py-2.5 font-semibold">Qty</th>
+										<th className="px-4 py-2.5 font-semibold">Unit Price</th>
+										<th className="px-4 py-2.5 font-semibold">Line Total</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -116,14 +116,14 @@ export default function InvoicesShow({ invoice }: InvoiceShowProps) {
 											key={item.id}
 											className="border-t border-sidebar-border/60 dark:border-sidebar-border"
 										>
-											<td className="px-5 py-3 font-medium">
+											<td className="px-4 py-2.5 font-medium">
 												{item.product?.name ?? `Product #${item.product_id}`}
 											</td>
-											<td className="px-5 py-3">{item.quantity}</td>
-											<td className="px-5 py-3">
+											<td className="px-4 py-2.5">{item.quantity}</td>
+											<td className="px-4 py-2.5">
 												{formatCurrency(item.unit_price)}
 											</td>
-											<td className="px-5 py-3 font-medium">
+											<td className="px-4 py-2.5 font-medium">
 												{formatCurrency(item.line_total)}
 											</td>
 										</tr>
