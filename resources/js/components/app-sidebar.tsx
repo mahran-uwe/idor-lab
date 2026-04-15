@@ -5,6 +5,7 @@ import {
 	ReceiptText,
 	ScanBarcode,
 	Server,
+	Shield,
 	Terminal,
 } from "lucide-react";
 import AppLogo from "@/components/app-logo";
@@ -22,6 +23,7 @@ import {
 } from "@/components/ui/sidebar";
 import { dashboard } from "@/routes";
 import { index as api } from "@/routes/api";
+import { index as authorizationModel } from "@/routes/authorization-model";
 import { index as documents } from "@/routes/documents";
 import { index as invoices } from "@/routes/invoices";
 import { index as tests } from "@/routes/tests";
@@ -52,6 +54,11 @@ const mainNavItems: NavItem[] = [
 		title: "API",
 		href: api(),
 		icon: Server,
+	},
+	{
+		title: "Authorization Model",
+		href: authorizationModel(),
+		icon: Shield,
 	},
 	{
 		title: "Tests",
