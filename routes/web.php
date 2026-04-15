@@ -6,6 +6,7 @@ use App\Http\Controllers\InsecureInvoiceController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\SecureDocumentController;
 use App\Http\Controllers\SecureInvoiceController;
+use App\Http\Controllers\UUIDController;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -18,6 +19,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('dashboard', 'dashboard')->name('dashboard');
 
     Route::get('documents', DocumentController::class)->name('documents.index');
+    Route::get('uuid', UUIDController::class)->name('uuid.index');
     Route::get('invoices', InvoiceController::class)->name('invoices.index');
 
     Route::prefix('insecure')->name('insecure.')->group(function () {
