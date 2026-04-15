@@ -123,9 +123,16 @@ export function AccessDemoColumn({
 						key={section.owner}
 						className="space-y-2 rounded-xl border border-sidebar-border/70 p-3 dark:border-sidebar-border"
 					>
-						<h3 className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
-							{section.heading}
-						</h3>
+						<div className="flex items-center gap-2">
+							<h3 className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+								{section.heading}
+							</h3>
+							{prioritizeOwner && section.owner !== prioritizeOwner ? (
+								<span className="text-xs font-semibold tracking-wide uppercase text-amber-700 dark:text-amber-300 bg-amber-100/80 dark:bg-amber-900/80 px-1 rounded">
+									Demo
+								</span>
+							) : null}
+						</div>
 						{section.items.length > 0 ? (
 							section.items.map((item) => (
 								<button
