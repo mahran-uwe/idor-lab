@@ -20,7 +20,7 @@ class DocumentPolicy
      */
     public function view(User $user, Document $document): bool
     {
-        return $user->id === $document->user_id || $user->role === 'admin';
+        return $user->id === $document->user_id || $user->is_admin;
     }
 
     /**
