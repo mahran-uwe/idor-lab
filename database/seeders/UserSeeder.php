@@ -23,6 +23,7 @@ class UserSeeder extends Seeder
                 [
                     'name' => $name,
                     'password' => Hash::make('password'),
+                    'role' => $name === 'Super Admin' ? 'admin' : 'user',
                 ],
             );
         }
