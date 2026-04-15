@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Document;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
@@ -23,19 +24,30 @@ class DocumentSeeder extends Seeder
             ->orderBy('id')
             ->get();
 
-        foreach ($users as $user) {
+        $firstSeededId = 101;
+        $lastSeededId = $firstSeededId + ($users->count() * 2) - 1;
+
+        Document::query()
+            ->whereBetween('id', [$firstSeededId, $lastSeededId])
+            ->delete();
+
+        foreach ($users as $userIndex => $user) {
+            $firstDocumentId = $firstSeededId + ($userIndex * 2);
+            $secondDocumentId = $firstDocumentId + 1;
 
             $user->documents()->updateOrCreate(
-                ['title' => 'Document 1'],
+                ['id' => $firstDocumentId],
                 [
+                    'title' => 'Document 1',
                     'uuid' => Str::uuid(),
                     'path' => storage_path('app/demo/documents/Sample Document.pdf'),
                 ],
             );
 
             $user->documents()->updateOrCreate(
-                ['title' => 'Document 2'],
+                ['id' => $secondDocumentId],
                 [
+                    'title' => 'Document 2',
                     'uuid' => Str::uuid(),
                     'path' => storage_path('app/demo/documents/Sample Document.pdf'),
                 ],
