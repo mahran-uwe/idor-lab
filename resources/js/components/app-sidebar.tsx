@@ -1,5 +1,5 @@
 import { Link } from "@inertiajs/react";
-import { File, LayoutGrid, ReceiptText } from "lucide-react";
+import { File, LayoutGrid, ReceiptText, ScanBarcode } from "lucide-react";
 import AppLogo from "@/components/app-logo";
 import { NavFooter } from "@/components/nav-footer";
 import { NavMain } from "@/components/nav-main";
@@ -34,6 +34,11 @@ const mainNavItems: NavItem[] = [
 		href: invoices(),
 		icon: ReceiptText,
 	},
+	{
+		title: "UUIDs",
+		href: "/uuid",
+		icon: ScanBarcode,
+	}
 ];
 
 const footerNavItems: NavItem[] = [];
