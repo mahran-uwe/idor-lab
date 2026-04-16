@@ -33,12 +33,15 @@ import { index as reviewerChecklist } from "@/routes/reviewer-checklist";
 import { index as tests } from "@/routes/tests";
 import type { NavItem } from "@/types";
 
-const mainNavItems: NavItem[] = [
+const overviewNavItems: NavItem[] = [
 	{
 		title: "Dashboard",
 		href: dashboard(),
 		icon: LayoutGrid,
 	},
+];
+
+const demosNavItems: NavItem[] = [
 	{
 		title: "Documents",
 		href: documents(),
@@ -59,6 +62,9 @@ const mainNavItems: NavItem[] = [
 		href: api(),
 		icon: Server,
 	},
+];
+
+const frameworkNavItems: NavItem[] = [
 	{
 		title: "Authorization Model",
 		href: authorizationModel(),
@@ -69,15 +75,37 @@ const mainNavItems: NavItem[] = [
 		href: reviewerChecklist(),
 		icon: ClipboardCheck,
 	},
+];
+
+const evaluationNavItems: NavItem[] = [
+	{
+		title: "Benchmarks",
+		href: benchmarks(),
+		icon: ChartBar,
+	},
 	{
 		title: "Automated Tests",
 		href: tests(),
 		icon: Terminal,
 	},
+];
+
+const mainNavGroups = [
 	{
-		title: "Benchmarks",
-		href: benchmarks(),
-		icon: ChartBar,
+		title: "Overview",
+		items: overviewNavItems,
+	},
+	{
+		title: "Demos",
+		items: demosNavItems,
+	},
+	{
+		title: "Framework",
+		items: frameworkNavItems,
+	},
+	{
+		title: "Evaluation",
+		items: evaluationNavItems,
 	},
 ];
 
@@ -99,7 +127,7 @@ export function AppSidebar() {
 			</SidebarHeader>
 
 			<SidebarContent>
-				<NavMain items={mainNavItems} />
+				<NavMain groups={mainNavGroups} />
 			</SidebarContent>
 
 			<SidebarFooter>
