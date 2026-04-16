@@ -10,6 +10,8 @@ import {
 	Server,
 	Shield,
 	Terminal,
+	FolderKey,
+	SquareAsterisk,
 } from "lucide-react";
 import AppLogo from "@/components/app-logo";
 import { NavFooter } from "@/components/nav-footer";
@@ -72,22 +74,22 @@ const frameworkNavItems: NavItem[] = [
 	{
 		title: "Authorization Model",
 		href: authorizationModel(),
+		icon: FolderKey,
+	},
+	{
+		title: "Secure Object References",
+		href: secureObjectReferences(),
+		icon: SquareAsterisk,
+	},
+	{
+		title: "Enforcement Points",
+		href: enforcementPoints(),
 		icon: Shield,
 	},
 	{
 		title: "Reviewer Checklist",
 		href: reviewerChecklist(),
 		icon: ClipboardCheck,
-	},
-	{
-		title: "Secure Object References",
-		href: secureObjectReferences(),
-		icon: Shield,
-	},
-	{
-		title: "Enforcement Points",
-		href: enforcementPoints(),
-		icon: Shield,
 	},
 	{
 		title: "IDOR Test Template",
