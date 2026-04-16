@@ -60,7 +60,7 @@ class ReviewerChecklistController extends Controller
                 'objectReference' => $definition['object_reference'],
                 'ruleEnforcementPoint' => $definition['rule_enforcement_point'],
                 'reviewed' => $definition['reviewed'],
-                'evidenceNotes' => '',
+                'evidenceNotes' => 'secure endpoint',
             ];
         }
 
