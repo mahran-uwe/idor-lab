@@ -1,7 +1,6 @@
 import { Head, Link } from "@inertiajs/react";
 import type { LucideIcon } from "lucide-react";
 import {
-	ArrowRight,
 	ChartBar,
 	ClipboardCheck,
 	File,
@@ -16,7 +15,6 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { PlaceholderPattern } from "@/components/ui/placeholder-pattern";
 import { dashboard } from "@/routes";
 import { index as api } from "@/routes/api";
 import { index as authorizationModel } from "@/routes/authorization-model";
@@ -37,6 +35,36 @@ type DashboardItem = NavItem & {
 	icon: LucideIcon;
 };
 
+const categoryStyles: Record<DashboardItem["category"], {
+	cardBorder: string;
+	cardHoverBorder: string;
+	iconWrapper: string;
+	iconColor: string;
+	badge: string;
+}> = {
+	Demo: {
+		cardBorder: "border-cyan-200/80 dark:border-cyan-900/60",
+		cardHoverBorder: "hover:border-cyan-400/70 dark:hover:border-cyan-600/70",
+		iconWrapper: "border-cyan-300/70 bg-cyan-50/80 dark:border-cyan-900 dark:bg-cyan-950/50",
+		iconColor: "text-cyan-700 dark:text-cyan-300",
+		badge: "border-cyan-300/80 bg-cyan-100/70 text-cyan-800 dark:border-cyan-800 dark:bg-cyan-950/70 dark:text-cyan-300",
+	},
+	Framework: {
+		cardBorder: "border-emerald-200/80 dark:border-emerald-900/60",
+		cardHoverBorder: "hover:border-emerald-400/70 dark:hover:border-emerald-600/70",
+		iconWrapper: "border-emerald-300/70 bg-emerald-50/80 dark:border-emerald-900 dark:bg-emerald-950/50",
+		iconColor: "text-emerald-700 dark:text-emerald-300",
+		badge: "border-emerald-300/80 bg-emerald-100/70 text-emerald-800 dark:border-emerald-800 dark:bg-emerald-950/70 dark:text-emerald-300",
+	},
+	Evaluation: {
+		cardBorder: "border-amber-200/80 dark:border-amber-900/60",
+		cardHoverBorder: "hover:border-amber-400/70 dark:hover:border-amber-600/70",
+		iconWrapper: "border-amber-300/70 bg-amber-50/80 dark:border-amber-900 dark:bg-amber-950/50",
+		iconColor: "text-amber-700 dark:text-amber-300",
+		badge: "border-amber-300/80 bg-amber-100/70 text-amber-800 dark:border-amber-800 dark:bg-amber-950/70 dark:text-amber-300",
+	},
+};
+
 const dashboardItems: DashboardItem[] = [
 	{
 		title: "Documents",
@@ -49,7 +77,7 @@ const dashboardItems: DashboardItem[] = [
 	{
 		title: "Invoices",
 		href: invoices(),
-		description: "Explore tenant-safe access controls for invoice resources.",
+		description: "Explore safe access controls for invoice resources.",
 		category: "Demo",
 		icon: ReceiptText,
 	},
@@ -65,7 +93,7 @@ const dashboardItems: DashboardItem[] = [
 		title: "API",
 		href: api(),
 		description:
-			"Review API-side access checks and response behavior for object lookups.",
+			"Review API access checks and response behavior for object lookups.",
 		category: "Demo",
 		icon: Server,
 	},
@@ -105,7 +133,7 @@ const dashboardItems: DashboardItem[] = [
 		title: "IDOR Test Template",
 		href: idorTestTemplate(),
 		description:
-			"Start from reusable test prompts for insecure and secure variants.",
+			"A reusable test template to verify correct access controls on object references.",
 		category: "Framework",
 		icon: ListChecks,
 	},
@@ -113,7 +141,7 @@ const dashboardItems: DashboardItem[] = [
 		title: "Benchmarks",
 		href: benchmarks(),
 		description:
-			"Measure implementation quality against reference security expectations.",
+			"Measure performance impacts of different access control approaches.",
 		category: "Evaluation",
 		icon: ChartBar,
 	},
@@ -121,7 +149,7 @@ const dashboardItems: DashboardItem[] = [
 		title: "Automated Tests",
 		href: tests(),
 		description:
-			"Run and inspect automated checks that validate the framework behavior.",
+			"Run and inspect automated tests to verify access control behavior across scenarios.",
 		category: "Evaluation",
 		icon: Terminal,
 	},
@@ -142,6 +170,7 @@ export default function Dashboard() {
 				<section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
 					{dashboardItems.map((item) => {
 						const ItemIcon = item.icon;
+						const categoryStyle = categoryStyles[item.category];
 
 						return (
 							<Link
@@ -150,13 +179,19 @@ export default function Dashboard() {
 								prefetch
 								className="block h-full rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
 							>
-								<Card className="h-full border-sidebar-border/70 transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md dark:border-sidebar-border">
+								<Card
+									className={`h-full ${categoryStyle.cardBorder} transition-all hover:-translate-y-0.5 ${categoryStyle.cardHoverBorder} hover:shadow-md`}
+								>
 									<CardHeader className="gap-3">
 										<div className="flex items-center justify-between gap-3">
-											<div className="flex size-10 items-center justify-center rounded-lg border bg-muted/40 text-muted-foreground">
+											<div
+												className={`flex size-10 items-center justify-center rounded-lg border ${categoryStyle.iconWrapper} ${categoryStyle.iconColor}`}
+											>
 												<ItemIcon className="size-5" />
 											</div>
-											<Badge variant="outline">{item.category}</Badge>
+											<Badge variant="outline" className={categoryStyle.badge}>
+												{item.category}
+											</Badge>
 										</div>
 										<CardTitle className="text-lg leading-tight">
 											{item.title}
