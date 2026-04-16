@@ -4,6 +4,7 @@ use App\Http\Controllers\APIController;
 use App\Http\Controllers\AuthorizationModelController;
 use App\Http\Controllers\BenchmarkController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\IdorTestTemplateController;
 use App\Http\Controllers\InsecureDocumentController;
 use App\Http\Controllers\InsecureInvoiceController;
 use App\Http\Controllers\InvoiceController;
@@ -29,6 +30,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('api/invoices', APIController::class)->name('api.index');
     Route::get('authorization-model', AuthorizationModelController::class)->name('authorization-model.index');
     Route::get('reviewer-checklist', ReviewerChecklistController::class)->name('reviewer-checklist.index');
+    Route::get('idor-test-template', IdorTestTemplateController::class)->name('idor-test-template.index');
     Route::get('benchmarks', BenchmarkController::class)->name('benchmarks.index');
     Route::get('tests', TestController::class)->name('tests.index');
 

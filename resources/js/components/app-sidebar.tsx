@@ -4,6 +4,7 @@ import {
 	ChartBar,
 	File,
 	LayoutGrid,
+	ListChecks,
 	ReceiptText,
 	ScanBarcode,
 	Server,
@@ -29,6 +30,7 @@ import { index as authorizationModel } from "@/routes/authorization-model";
 import { index as benchmarks } from "@/routes/benchmarks";
 import { index as documents } from "@/routes/documents";
 import { index as invoices } from "@/routes/invoices";
+import { index as idorTestTemplate } from "@/routes/idor-test-template";
 import { index as reviewerChecklist } from "@/routes/reviewer-checklist";
 import { index as tests } from "@/routes/tests";
 import type { NavItem } from "@/types";
@@ -74,6 +76,11 @@ const frameworkNavItems: NavItem[] = [
 		title: "Reviewer Checklist",
 		href: reviewerChecklist(),
 		icon: ClipboardCheck,
+	},
+	{
+		title: "IDOR Test Template",
+		href: idorTestTemplate(),
+		icon: ListChecks,
 	},
 ];
 
