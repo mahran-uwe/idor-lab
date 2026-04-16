@@ -7,6 +7,7 @@ use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\InsecureDocumentController;
 use App\Http\Controllers\InsecureInvoiceController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\ReviewerChecklistController;
 use App\Http\Controllers\SecureDocumentController;
 use App\Http\Controllers\SecureInvoiceController;
 use App\Http\Controllers\TestController;
@@ -27,6 +28,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('uuid', UUIDController::class)->name('uuid.index');
     Route::get('api/invoices', APIController::class)->name('api.index');
     Route::get('authorization-model', AuthorizationModelController::class)->name('authorization-model.index');
+    Route::get('reviewer-checklist', ReviewerChecklistController::class)->name('reviewer-checklist.index');
     Route::get('benchmarks', BenchmarkController::class)->name('benchmarks.index');
     Route::get('tests', TestController::class)->name('tests.index');
 

@@ -1,5 +1,6 @@
 import { Link } from "@inertiajs/react";
 import {
+	ClipboardCheck,
 	ChartBar,
 	File,
 	LayoutGrid,
@@ -28,6 +29,7 @@ import { index as authorizationModel } from "@/routes/authorization-model";
 import { index as benchmarks } from "@/routes/benchmarks";
 import { index as documents } from "@/routes/documents";
 import { index as invoices } from "@/routes/invoices";
+import { index as reviewerChecklist } from "@/routes/reviewer-checklist";
 import { index as tests } from "@/routes/tests";
 import type { NavItem } from "@/types";
 
@@ -63,7 +65,12 @@ const mainNavItems: NavItem[] = [
 		icon: Shield,
 	},
 	{
-		title: "Tests",
+		title: "Reviewer Checklist",
+		href: reviewerChecklist(),
+		icon: ClipboardCheck,
+	},
+	{
+		title: "Automated Tests",
 		href: tests(),
 		icon: Terminal,
 	},
