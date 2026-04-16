@@ -33,6 +33,7 @@ import { index as enforcementPoints } from "@/routes/enforcement-points";
 import { index as invoices } from "@/routes/invoices";
 import { index as idorTestTemplate } from "@/routes/idor-test-template";
 import { index as reviewerChecklist } from "@/routes/reviewer-checklist";
+import { index as secureObjectReferences } from "@/routes/secure-object-references";
 import { index as tests } from "@/routes/tests";
 import type { NavItem } from "@/types";
 
@@ -77,6 +78,11 @@ const frameworkNavItems: NavItem[] = [
 		title: "Reviewer Checklist",
 		href: reviewerChecklist(),
 		icon: ClipboardCheck,
+	},
+	{
+		title: "Secure Object References",
+		href: secureObjectReferences(),
+		icon: Shield,
 	},
 	{
 		title: "Enforcement Points",
