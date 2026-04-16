@@ -29,6 +29,7 @@ import { index as api } from "@/routes/api";
 import { index as authorizationModel } from "@/routes/authorization-model";
 import { index as benchmarks } from "@/routes/benchmarks";
 import { index as documents } from "@/routes/documents";
+import { index as enforcementPoints } from "@/routes/enforcement-points";
 import { index as invoices } from "@/routes/invoices";
 import { index as idorTestTemplate } from "@/routes/idor-test-template";
 import { index as reviewerChecklist } from "@/routes/reviewer-checklist";
@@ -76,6 +77,11 @@ const frameworkNavItems: NavItem[] = [
 		title: "Reviewer Checklist",
 		href: reviewerChecklist(),
 		icon: ClipboardCheck,
+	},
+	{
+		title: "Enforcement Points",
+		href: enforcementPoints(),
+		icon: Shield,
 	},
 	{
 		title: "IDOR Test Template",
