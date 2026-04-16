@@ -7,8 +7,8 @@ export default function AppLogo() {
                 <AppLogoIcon className="size-5 fill-current text-white dark:text-black" />
             </div>
             <div className="ml-1 grid flex-1 text-left text-sm">
-                <span className="mb-0.5 xtruncate leading-tight font-semibold">
-                    IDOR Lab
+                <span className="truncate leading-tight font-semibold">
+                    IDOR LAB
                 </span>
             </div>
         </>

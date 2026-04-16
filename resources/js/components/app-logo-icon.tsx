@@ -11,11 +11,9 @@ export default function AppLogoIcon(props: SVGAttributes<SVGElement>) {
 			stroke="currentColor"
 		>
 			<title>App Logo</title>
-			<path
-				strokeLinecap="round"
-				strokeLinejoin="round"
-				d="M13.5 10.5V6.75a4.5 4.5 0 1 1 9 0v3.75M3.75 21.75h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H3.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z"
-			/>
+			<path d="M14 2v6a2 2 0 0 0 .245.96l5.51 10.08A2 2 0 0 1 18 22H6a2 2 0 0 1-1.755-2.96l5.51-10.08A2 2 0 0 0 10 8V2" />
+			<path d="M6.453 15h11.094" />
+			<path d="M8.5 2h7" />
 		</svg>
 	);
 }
