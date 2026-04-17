@@ -1,5 +1,6 @@
 import { Head, Link, usePage } from "@inertiajs/react";
 import { dashboard, loginAs } from "@/routes";
+import Logo from "@/components/logo";
 
 export default function Welcome() {
 	const { auth } = usePage().props;
@@ -16,9 +17,10 @@ export default function Welcome() {
 
 				<main className="relative mx-auto flex min-h-screen w-full max-w-6xl flex-col justify-between px-6 py-10 sm:px-10 lg:py-14">
 					<header className="rise-in">
-						<p className="inline-flex items-center rounded-full border border-[#1a1f1d]/15 bg-white/75 px-4 py-1 text-xs font-semibold tracking-[0.18em] uppercase shadow-sm backdrop-blur">
-							IDOR Lab
-						</p>
+						<div className="inline-flex items-center text-sm font-semibold tracking-[0.18em] uppercase">
+							<Logo />
+							<span className="ml-2">IDOR Lab</span>
+						</div>
 					</header>
 
 					<section className="grid items-center gap-10 py-10 lg:grid-cols-[1.08fr_0.92fr] lg:py-14">
