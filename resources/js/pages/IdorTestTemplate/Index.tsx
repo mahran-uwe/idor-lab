@@ -73,7 +73,9 @@ export default function IdorTestTemplateIndex({
 		}
 
 		if (passFailFilter === "pending") {
-			return rows.filter((row) => row.passFail !== "Pass" && row.passFail !== "Fail");
+			return rows.filter(
+				(row) => row.passFail !== "Pass" && row.passFail !== "Fail",
+			);
 		}
 
 		return rows;
@@ -99,7 +101,9 @@ export default function IdorTestTemplateIndex({
 						<p className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
 							Total Cases
 						</p>
-						<p className="mt-2 text-2xl font-bold text-foreground">{totalRows}</p>
+						<p className="mt-2 text-2xl font-bold text-foreground">
+							{totalRows}
+						</p>
 					</div>
 					<div className="rounded-xl border border-emerald-200/70 bg-emerald-50/50 p-4 dark:border-emerald-900 dark:bg-emerald-950/20">
 						<p className="text-xs font-semibold tracking-wide text-emerald-700 uppercase dark:text-emerald-300">

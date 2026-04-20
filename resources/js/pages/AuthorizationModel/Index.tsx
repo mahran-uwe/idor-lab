@@ -50,7 +50,8 @@ export default function AuthorizationModelIndex({
 						Authorization Model
 					</h1>
 					<p className="text-sm text-muted-foreground">
-						Current authorization behavior for the prototype resources implemented in the secure demonstrations.
+						Current authorization behavior for the prototype resources
+						implemented in the secure demonstrations.
 					</p>
 				</div>
 
@@ -59,7 +60,9 @@ export default function AuthorizationModelIndex({
 						<p className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
 							Total Rules
 						</p>
-						<p className="mt-2 text-2xl font-bold text-foreground">{totalRows}</p>
+						<p className="mt-2 text-2xl font-bold text-foreground">
+							{totalRows}
+						</p>
 					</div>
 					<div className="rounded-xl border border-emerald-200/70 bg-emerald-50/50 p-4 dark:border-emerald-900 dark:bg-emerald-950/20">
 						<p className="text-xs font-semibold tracking-wide text-emerald-700 uppercase dark:text-emerald-300">
