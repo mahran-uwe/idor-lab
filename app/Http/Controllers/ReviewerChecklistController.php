@@ -27,6 +27,7 @@ class ReviewerChecklistController extends Controller
      *     objectReference: string,
      *     ruleEnforcementPoint: string,
      *     reviewed: bool,
+     *     evidence_notes: string,
      * }>
      */
     private function buildRows(): array
@@ -39,6 +40,7 @@ class ReviewerChecklistController extends Controller
          *     object_reference: string,
          *     rule_enforcement_point: string,
          *     reviewed: bool,
+         *     evidence_notes: string,
          * }> $definitions
          */
         $definitions = config('reviewer_checklist.rows', []);
@@ -60,7 +62,7 @@ class ReviewerChecklistController extends Controller
                 'objectReference' => $definition['object_reference'],
                 'ruleEnforcementPoint' => $definition['rule_enforcement_point'],
                 'reviewed' => $definition['reviewed'],
-                'evidenceNotes' => 'secure endpoint',
+                'evidenceNotes' => $definition['evidence_notes'],
             ];
         }
 

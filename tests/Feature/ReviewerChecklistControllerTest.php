@@ -16,11 +16,12 @@ test('authenticated users can view reviewer checklist page', function () {
     $response->assertSuccessful();
     $response->assertInertia(fn (AssertableInertia $page) => $page
         ->component('ReviewerChecklist/Index')
-        ->has('rows', 4)
+        ->has('rows', 8)
         ->where('rows.0.id', 'C1')
         ->where('rows.0.resource', 'Documents')
         ->where('rows.1.id', 'C2')
-        ->where('rows.3.id', 'C4')
+        ->where('rows.6.id', 'C7')
+        ->where('rows.7.id', 'C8')
     );
 });
 
