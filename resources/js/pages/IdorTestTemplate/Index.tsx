@@ -1,4 +1,5 @@
 import { Head } from "@inertiajs/react";
+import { useMemo, useState } from "react";
 import { index as idorTestTemplate } from "@/routes/idor-test-template";
 
 type IdorTemplateRow = {
@@ -16,6 +17,8 @@ type IdorTemplateRow = {
 type IdorTestTemplatePageProps = {
 	rows: IdorTemplateRow[];
 };
+
+type PassFailFilter = "all" | "pass" | "fail" | "pending";
 
 function passFailClasses(passFail: IdorTemplateRow["passFail"]): string {
 	if (passFail === "Pass") {
@@ -47,6 +50,35 @@ function severityClasses(severity: string): string {
 export default function IdorTestTemplateIndex({
 	rows,
 }: IdorTestTemplatePageProps) {
+	const [passFailFilter, setPassFailFilter] = useState<PassFailFilter>("all");
+
+	const totalRows = rows.length;
+	const passCount = useMemo(
+		() => rows.filter((row) => row.passFail === "Pass").length,
+		[rows],
+	);
+	const failCount = useMemo(
+		() => rows.filter((row) => row.passFail === "Fail").length,
+		[rows],
+	);
+	const pendingCount = totalRows - passCount - failCount;
+
+	const filteredRows = useMemo(() => {
+		if (passFailFilter === "pass") {
+			return rows.filter((row) => row.passFail === "Pass");
+		}
+
+		if (passFailFilter === "fail") {
+			return rows.filter((row) => row.passFail === "Fail");
+		}
+
+		if (passFailFilter === "pending") {
+			return rows.filter((row) => row.passFail !== "Pass" && row.passFail !== "Fail");
+		}
+
+		return rows;
+	}, [rows, passFailFilter]);
+
 	return (
 		<>
 			<Head title="IDOR Test Template" />
@@ -60,6 +92,88 @@ export default function IdorTestTemplateIndex({
 						Template for documenting IDOR test cases, which can be used as a
 						basis for implementing automated tests.
 					</p>
+				</div>
+
+				<div className="grid gap-3 md:grid-cols-4">
+					<div className="rounded-xl border border-sidebar-border/70 bg-background/80 p-4 dark:border-sidebar-border">
+						<p className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+							Total Cases
+						</p>
+						<p className="mt-2 text-2xl font-bold text-foreground">{totalRows}</p>
+					</div>
+					<div className="rounded-xl border border-emerald-200/70 bg-emerald-50/50 p-4 dark:border-emerald-900 dark:bg-emerald-950/20">
+						<p className="text-xs font-semibold tracking-wide text-emerald-700 uppercase dark:text-emerald-300">
+							Pass
+						</p>
+						<p className="mt-2 text-2xl font-bold text-emerald-700 dark:text-emerald-300">
+							{passCount}
+						</p>
+					</div>
+					<div className="rounded-xl border border-rose-200/70 bg-rose-50/50 p-4 dark:border-rose-900 dark:bg-rose-950/20">
+						<p className="text-xs font-semibold tracking-wide text-rose-700 uppercase dark:text-rose-300">
+							Fail
+						</p>
+						<p className="mt-2 text-2xl font-bold text-rose-700 dark:text-rose-300">
+							{failCount}
+						</p>
+					</div>
+					<div className="rounded-xl border border-amber-200/70 bg-amber-50/50 p-4 dark:border-amber-900 dark:bg-amber-950/20">
+						<p className="text-xs font-semibold tracking-wide text-amber-700 uppercase dark:text-amber-300">
+							Pending
+						</p>
+						<p className="mt-2 text-2xl font-bold text-amber-700 dark:text-amber-300">
+							{pendingCount}
+						</p>
+					</div>
+				</div>
+
+				<div className="flex flex-wrap items-center gap-3 rounded-xl border border-sidebar-border/70 bg-muted/30 p-1 dark:border-sidebar-border">
+					<div className="inline-flex items-center gap-1">
+						<button
+							type="button"
+							onClick={() => setPassFailFilter("all")}
+							className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${
+								passFailFilter === "all"
+									? "bg-background text-foreground shadow-sm"
+									: "text-muted-foreground hover:bg-background/60 hover:text-foreground"
+							}`}
+						>
+							All ({totalRows})
+						</button>
+						<button
+							type="button"
+							onClick={() => setPassFailFilter("pass")}
+							className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${
+								passFailFilter === "pass"
+									? "bg-emerald-600 text-white shadow-sm"
+									: "text-emerald-700 hover:bg-emerald-100 dark:text-emerald-300 dark:hover:bg-emerald-900/40"
+							}`}
+						>
+							Pass ({passCount})
+						</button>
+						<button
+							type="button"
+							onClick={() => setPassFailFilter("fail")}
+							className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${
+								passFailFilter === "fail"
+									? "bg-rose-600 text-white shadow-sm"
+									: "text-rose-700 hover:bg-rose-100 dark:text-rose-300 dark:hover:bg-rose-900/40"
+							}`}
+						>
+							Fail ({failCount})
+						</button>
+						<button
+							type="button"
+							onClick={() => setPassFailFilter("pending")}
+							className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${
+								passFailFilter === "pending"
+									? "bg-amber-600 text-white shadow-sm"
+									: "text-amber-700 hover:bg-amber-100 dark:text-amber-300 dark:hover:bg-amber-900/40"
+							}`}
+						>
+							Pending ({pendingCount})
+						</button>
+					</div>
 				</div>
 
 				<div className="overflow-hidden rounded-xl border border-sidebar-border/70 bg-background/80 dark:border-sidebar-border">
@@ -79,7 +193,7 @@ export default function IdorTestTemplateIndex({
 								</tr>
 							</thead>
 							<tbody>
-								{rows.map((row) => (
+								{filteredRows.map((row) => (
 									<tr
 										key={`${row.testId}-${row.userRole}`}
 										className="border-t border-sidebar-border/70 align-top dark:border-sidebar-border"
@@ -121,6 +235,16 @@ export default function IdorTestTemplateIndex({
 										</td>
 									</tr>
 								))}
+								{filteredRows.length === 0 && (
+									<tr className="border-t border-sidebar-border/70 dark:border-sidebar-border">
+										<td
+											className="px-4 py-6 text-center text-muted-foreground"
+											colSpan={9}
+										>
+											No test cases found for this filter.
+										</td>
+									</tr>
+								)}
 							</tbody>
 						</table>
 					</div>
