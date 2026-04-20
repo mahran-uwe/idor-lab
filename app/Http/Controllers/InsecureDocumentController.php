@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\DocumentRequest;
 use App\Models\Document;
+use Illuminate\Support\Facades\Storage;
 
 class InsecureDocumentController extends Controller
 {
@@ -41,7 +42,9 @@ class InsecureDocumentController extends Controller
             $document = Document::where('uuid', $uuid)->firstOrFail();
         }
 
-        return response()->file($document->path);
+        $path = Storage::disk('demo')->path($document->path);
+
+        return response()->file($path);
     }
 
     /**

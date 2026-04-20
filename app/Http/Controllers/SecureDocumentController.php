@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Document;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 
 class SecureDocumentController extends Controller
 {
@@ -43,7 +44,9 @@ class SecureDocumentController extends Controller
 
         Gate::authorize('view', $document);
 
-        $response = response()->file($document->path);
+        $path = Storage::disk('demo')->path($document->path);
+
+        $response = response()->file($path);
 
         $response->headers->set('Cache-Control', 'no-store, no-cache, must-revalidate, private, max-age=0');
         $response->headers->set('Pragma', 'no-cache');

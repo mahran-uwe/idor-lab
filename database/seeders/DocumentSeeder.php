@@ -43,7 +43,7 @@ class DocumentSeeder extends Seeder
                 ['id' => $firstDocumentId],
                 [
                     'title' => 'Document 1',
-                    'path' => storage_path('app/demo/documents/Document 1' . $documentSuffix . '.pdf'),
+                    'path' => 'documents/Document 1'.$documentSuffix.'.pdf',
                 ],
             );
 
@@ -51,7 +51,7 @@ class DocumentSeeder extends Seeder
                 ['id' => $secondDocumentId],
                 [
                     'title' => 'Document 2',
-                    'path' => storage_path('app/demo/documents/Document 2' . $documentSuffix . '.pdf'),
+                    'path' => 'documents/Document 2'.$documentSuffix.'.pdf',
                 ],
             );
         }
