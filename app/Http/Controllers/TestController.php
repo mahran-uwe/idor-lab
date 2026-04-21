@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -21,21 +22,27 @@ class TestController extends Controller
 
         $shouldRun = (bool) ($validated['run'] ?? false);
         if ($shouldRun) {
-            $processResult = Process::path(base_path())
-                ->timeout(300)
-                ->run([
-                    PHP_BINARY,
-                    'artisan',
-                    'test',
-                    '--without-tty',
-                    '--no-interaction',
-                ]);
+            $pestBinaryPath = base_path('vendor/pestphp/pest/bin/pest');
 
-            $exitCode = $processResult->exitCode();
+            if (! File::isFile($pestBinaryPath)) {
+                $exitCode = 64;
+                $output = "Pest binary not found at {$pestBinaryPath}. Run composer install on this server after moving Pest packages to require.";
+            } else {
+                $processResult = Process::path(base_path())
+                    ->timeout(300)
+                    ->run([
+                        PHP_BINARY,
+                        'artisan',
+                        'test',
+                        '--without-tty',
+                    ]);
 
-            $output = $processResult->output();
-            if ($processResult->errorOutput() !== '') {
-                $output = trim($output.PHP_EOL.$processResult->errorOutput());
+                $exitCode = $processResult->exitCode();
+
+                $output = $processResult->output();
+                if ($processResult->errorOutput() !== '') {
+                    $output = trim($output.PHP_EOL.$processResult->errorOutput());
+                }
             }
 
             $result = [

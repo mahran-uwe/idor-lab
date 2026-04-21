@@ -54,7 +54,6 @@ test('test runner executes artisan test command and returns output', function ()
 
         return str_contains($command, 'artisan test')
             && str_contains($command, '--without-tty')
-            && str_contains($command, '--no-interaction')
             && $result->exitCode() === 1;
     });
 
