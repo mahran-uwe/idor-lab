@@ -12,7 +12,7 @@ test('secure document response disables browser caching', function () {
     $document = new Document;
     $document->user_id = $user->id;
     $document->title = 'Sensitive Document';
-    $document->path = base_path('composer.json');
+    $document->path = 'documents/Document 1A.pdf';
     $document->save();
 
     $response = $this

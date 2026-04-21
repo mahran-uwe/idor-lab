@@ -15,7 +15,7 @@ test('users can view insecure documents they do not own via id route', function 
     $document->user_id = $owner->id;
     $document->uuid = (string) Str::uuid();
     $document->title = 'Owner Document';
-    $document->path = base_path('composer.json');
+    $document->path = 'documents/Document 1A.pdf';
     $document->save();
 
     $response = $this
@@ -33,7 +33,7 @@ test('users can view insecure documents they do not own via uuid route', functio
     $document->user_id = $owner->id;
     $document->uuid = (string) Str::uuid();
     $document->title = 'Owner UUID Document';
-    $document->path = base_path('composer.json');
+    $document->path = 'documents/Document 1A.pdf';
     $document->save();
 
     $response = $this
