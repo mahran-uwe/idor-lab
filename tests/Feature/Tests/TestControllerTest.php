@@ -1,8 +1,10 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Contracts\Process\ProcessResult;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Artisan;
+use Illuminate\Process\PendingProcess;
+use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Testing\AssertableInertia;
 
@@ -30,17 +32,12 @@ test('test runner executes artisan test command and returns output', function ()
     $user = User::factory()->create();
     $simulatedOutput = "PASS  Tests\\Unit\\ExampleTest\n  ✓ that true is true\nFAIL  Tests\\Feature\\Invoices\\SecureInvoiceControllerTest\n  ⨯ users cannot view secure invoices they do not own\n";
 
-    Artisan::shouldReceive('call')
-        ->once()
-        ->with('test', [
-            '--without-tty' => true,
-            '--no-interaction' => true,
-        ])
-        ->andReturn(1);
-
-    Artisan::shouldReceive('output')
-        ->once()
-        ->andReturn($simulatedOutput);
+    Process::fake([
+        '*' => Process::result(
+            output: $simulatedOutput,
+            exitCode: 1,
+        ),
+    ]);
 
     $response = $this
         ->actingAs($user)
@@ -49,6 +46,17 @@ test('test runner executes artisan test command and returns output', function ()
         ]));
 
     $response->assertRedirect(route('tests.index'));
+
+    Process::assertRan(function (PendingProcess $process, ProcessResult $result) {
+        $command = is_array($process->command)
+            ? implode(' ', $process->command)
+            : $process->command;
+
+        return str_contains($command, 'artisan test')
+            && str_contains($command, '--without-tty')
+            && str_contains($command, '--no-interaction')
+            && $result->exitCode() === 1;
+    });
 
     Storage::disk('local')->assertExists('test-results/latest.json');
 

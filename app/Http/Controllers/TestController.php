@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -21,26 +21,22 @@ class TestController extends Controller
 
         $shouldRun = (bool) ($validated['run'] ?? false);
         if ($shouldRun) {
-            $parameters = [
-                '--without-tty' => true,
-                '--no-interaction' => true,
-            ];
+            $processResult = Process::path(base_path())
+                ->timeout(300)
+                ->run([
+                    PHP_BINARY,
+                    'artisan',
+                    'test',
+                    '--without-tty',
+                    '--no-interaction',
+                ]);
 
-            $originalWorkingDirectory = getcwd();
+            $exitCode = $processResult->exitCode();
 
-            if ($originalWorkingDirectory !== false) {
-                chdir(base_path());
+            $output = $processResult->output();
+            if ($processResult->errorOutput() !== '') {
+                $output = trim($output.PHP_EOL.$processResult->errorOutput());
             }
-
-            try {
-                $exitCode = Artisan::call('test', $parameters);
-            } finally {
-                if ($originalWorkingDirectory !== false) {
-                    chdir($originalWorkingDirectory);
-                }
-            }
-
-            $output = Artisan::output();
 
             $result = [
                 'exit_code' => $exitCode,
