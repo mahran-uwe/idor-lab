@@ -11,7 +11,7 @@ export default function Welcome() {
 
     return (
         <>
-            <Head title="IDOR Lab" />
+            <Head />
 
             <div className="relative min-h-screen overflow-hidden bg-[#f6f4ef] text-[#1a1f1d]">
                 <div className="orb absolute -top-20 -left-16 h-72 w-72 rounded-full bg-[#f2b880]/45 blur-3xl" />
