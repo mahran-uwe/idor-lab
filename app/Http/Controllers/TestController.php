@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
+use RuntimeException;
+use Throwable;
 
 class TestController extends Controller
 {
@@ -21,35 +23,8 @@ class TestController extends Controller
 
         $shouldRun = (bool) ($validated['run'] ?? false);
         if ($shouldRun) {
-            $parameters = [
-                '--without-tty' => true,
-                '--no-interaction' => true,
-            ];
-
-            $originalWorkingDirectory = getcwd();
-
-            if ($originalWorkingDirectory !== false) {
-                chdir(base_path());
-            }
-
-            try {
-                $exitCode = Artisan::call('test', $parameters);
-            } finally {
-                if ($originalWorkingDirectory !== false) {
-                    chdir($originalWorkingDirectory);
-                }
-            }
-
-            $output = Artisan::output();
-
-            $result = [
-                'exit_code' => $exitCode,
-                'status' => $exitCode === 0 ? 'passed' : 'failed',
-                'output' => $output,
-                'tests' => $this->parseTestsFromOutput($output),
-            ];
-
-            Storage::disk('local')->put(self::RESULT_FILE_PATH, json_encode($result, JSON_PRETTY_PRINT));
+            $result = $this->runTestsSafely();
+            $this->storeResultSafely($result);
 
             return to_route('tests.index');
         }
@@ -66,6 +41,76 @@ class TestController extends Controller
         return Inertia::render('Tests/Index', [
             'result' => $storedResult,
         ]);
+    }
+
+    /**
+     * @return array{exit_code: int, status: 'passed'|'failed', output: string, tests: array<int, array{name: string, status: 'passed'|'failed', suite: string|null}>}
+     */
+    private function runTestsSafely(): array
+    {
+        $parameters = [
+            '--without-tty' => true,
+            '--no-interaction' => true,
+        ];
+
+        $originalWorkingDirectory = getcwd();
+
+        if ($originalWorkingDirectory !== false) {
+            chdir(base_path());
+        }
+
+        try {
+            $exitCode = Artisan::call('test', $parameters);
+            $output = Artisan::output();
+        } catch (Throwable $exception) {
+            report($exception);
+
+            $output = sprintf(
+                'Unable to run automated tests. %s',
+                $exception->getMessage()
+            );
+
+            return [
+                'exit_code' => 1,
+                'status' => 'failed',
+                'output' => $output,
+                'tests' => [],
+            ];
+        } finally {
+            if ($originalWorkingDirectory !== false) {
+                chdir($originalWorkingDirectory);
+            }
+        }
+
+        return [
+            'exit_code' => $exitCode,
+            'status' => $exitCode === 0 ? 'passed' : 'failed',
+            'output' => $output,
+            'tests' => $this->parseTestsFromOutput($output),
+        ];
+    }
+
+    /**
+     * @param  array{exit_code: int, status: 'passed'|'failed', output: string, tests: array<int, array{name: string, status: 'passed'|'failed', suite: string|null}>}  $result
+     */
+    private function storeResultSafely(array $result): void
+    {
+        $encodedResult = json_encode($result, JSON_PRETTY_PRINT);
+        if ($encodedResult === false) {
+            report(new RuntimeException('Unable to encode test run result as JSON.'));
+
+            return;
+        }
+
+        try {
+            $wasStored = Storage::disk('local')->put(self::RESULT_FILE_PATH, $encodedResult);
+
+            if ($wasStored !== true) {
+                report(new RuntimeException('Unable to persist test run result.'));
+            }
+        } catch (Throwable $exception) {
+            report($exception);
+        }
     }
 
     /**

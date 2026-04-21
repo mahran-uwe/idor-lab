@@ -70,3 +70,39 @@ test('test runner executes artisan test command and returns output', function ()
             ->where('result.tests.1.suite', 'Tests\\Feature\\Invoices\\SecureInvoiceControllerTest')
         );
 });
+
+test('test runner gracefully handles exceptions when command execution fails', function () {
+    Storage::fake('local');
+
+    $user = User::factory()->create();
+
+    Artisan::shouldReceive('call')
+        ->once()
+        ->with('test', [
+            '--without-tty' => true,
+            '--no-interaction' => true,
+        ])
+        ->andThrow(new RuntimeException('The testing command is not available in this environment.'));
+
+    Artisan::shouldReceive('output')->never();
+
+    $response = $this
+        ->actingAs($user)
+        ->get(route('tests.index', [
+            'run' => 1,
+        ]));
+
+    $response->assertRedirect(route('tests.index'));
+
+    $this
+        ->actingAs($user)
+        ->get(route('tests.index'))
+        ->assertSuccessful()
+        ->assertInertia(fn (AssertableInertia $page) => $page
+            ->component('Tests/Index')
+            ->where('result.exit_code', 1)
+            ->where('result.status', 'failed')
+            ->where('result.output', 'Unable to run automated tests. The testing command is not available in this environment.')
+            ->where('result.tests', [])
+        );
+});
