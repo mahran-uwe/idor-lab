@@ -44,20 +44,6 @@ class AuthorizationModelController extends Controller
                     'default' => 'Allow',
                 ],
                 [
-                    'resource' => 'Invoice',
-                    'action' => 'View',
-                    'subjectRole' => 'User',
-                    'rule' => 'Own invoice only',
-                    'default' => 'Deny',
-                ],
-                [
-                    'resource' => 'Invoice',
-                    'action' => 'View',
-                    'subjectRole' => 'Admin',
-                    'rule' => 'Any invoice',
-                    'default' => 'Allow',
-                ],
-                [
                     'resource' => 'Invoice API Endpoint',
                     'action' => 'Read',
                     'subjectRole' => 'Sanctum Authenticated User',
