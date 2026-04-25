@@ -50,7 +50,7 @@ test('test runner executes artisan test command and returns output', function ()
 
     $response->assertRedirect(route('tests.index'));
 
-    Storage::disk('local')->assertExists('test-results/latest.json');
+    Storage::disk('demo')->assertExists('test-results/latest.json');
 
     $this
         ->actingAs($user)

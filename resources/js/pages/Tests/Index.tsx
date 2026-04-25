@@ -42,6 +42,7 @@ function splitTestNameAndDuration(testName: string): {
 
 export default function TestsIndex({ result }: TestsIndexProps) {
 	const [isRunning, setIsRunning] = useState(false);
+	const isProduction = import.meta.env.PROD;
 
 	const suites = useMemo(() => {
 		if (!result) {
@@ -184,15 +185,17 @@ export default function TestsIndex({ result }: TestsIndexProps) {
 						<p className="text-sm text-muted-foreground"></p>
 					</div>
 
-					<form onSubmit={onSubmit}>
-						<button
-							type="submit"
-							disabled={isRunning}
-							className="inline-flex h-10 items-center justify-center rounded-lg border border-sidebar-border/70 bg-background px-4 text-sm font-medium text-foreground transition-colors hover:bg-muted/60 disabled:cursor-not-allowed disabled:opacity-60 dark:border-sidebar-border"
-						>
-							{isRunning ? "Running..." : "Run Tests"}
-						</button>
-					</form>
+					{!isProduction ? (
+						<form onSubmit={onSubmit}>
+							<button
+								type="submit"
+								disabled={isRunning}
+								className="inline-flex h-10 items-center justify-center rounded-lg border border-sidebar-border/70 bg-background px-4 text-sm font-medium text-foreground transition-colors hover:bg-muted/60 disabled:cursor-not-allowed disabled:opacity-60 dark:border-sidebar-border"
+							>
+								{isRunning ? "Running..." : "Run Tests"}
+							</button>
+						</form>
+					) : null}
 				</div>
 
 				{result ? (
@@ -236,7 +239,6 @@ export default function TestsIndex({ result }: TestsIndexProps) {
 				) : null}
 
 				<div className="font-mono rounded-xl border border-sidebar-border/70 bg-background/80 p-4 dark:border-sidebar-border">
-					
 					{result && suites.length > 0 ? (
 						<div className="space-y-4">
 							{suites.map((suite) => (

@@ -1,0 +1,142 @@
+{
+    "exit_code": 0,
+    "status": "passed",
+    "output": "\n   PASS  Tests\\Unit\\InvoiceTotalsTest\n  \u2713 invoice item save computes line total and updates invoice totals     0.20s  \n  \u2713 invoice totals are recalculated when an item is deleted              0.01s  \n\n   PASS  Tests\\Feature\\Auth\\AuthenticationTest\n  \u2713 login screen can be rendered                                         0.05s  \n\n   PASS  Tests\\Feature\\Auth\\PasswordConfirmationTest\n  \u2713 password confirmation requires authentication                        0.01s  \n\n   PASS  Tests\\Feature\\BenchmarkControllerTest\n  \u2713 authenticated users can view benchmark dashboard                     0.10s  \n  \u2713 benchmark dashboard executes benchmark command and returns data      0.10s  \n  \u2713 guests are redirected away from benchmark dashboard                  0.01s  \n\n   PASS  Tests\\Feature\\DashboardTest\n  \u2713 guests are redirected to the login page                              0.01s  \n\n   PASS  Tests\\Feature\\Documents\\InsecureDocumentControllerTest\n  \u2713 users can view insecure documents they do not own via id route       0.03s  \n  \u2713 users can view insecure documents they do not own via uuid route     0.02s  \n\n   PASS  Tests\\Feature\\Documents\\SecureDocumentControllerTest\n  \u2713 secure document response disables browser caching                    0.01s  \n  \u2713 users cannot view secure documents they do not own                   0.01s  \n\n   PASS  Tests\\Feature\\EnforcementPointsPageTest\n  \u2713 authenticated users can view enforcement points page                 0.09s  \n  \u2713 guests are redirected away from enforcement points page              0.01s  \n\n   PASS  Tests\\Feature\\IdorTestTemplateControllerTest\n  \u2713 authenticated users can view idor test template page                 0.12s  \n  \u2713 guests are redirected away from idor test template page              0.01s  \n\n   PASS  Tests\\Feature\\Invoices\\InvoiceApiTest\n  \u2713 insecure invoice api allows users to access invoices they do not ow\u2026 0.01s  \n  \u2713 secure invoice api forbids users from accessing invoices they do no\u2026 0.01s  \n  \u2713 secure invoice api allows owners to access their invoices            0.01s  \n\n   PASS  Tests\\Feature\\Invoices\\SecureInvoiceControllerTest\n  \u2713 users cannot view secure invoices they do not own                    0.01s  \n\n   PASS  Tests\\Feature\\ReviewerChecklistControllerTest\n  \u2713 authenticated users can view reviewer checklist page                 0.09s  \n  \u2713 guests are redirected away from reviewer checklist page              0.01s  \n\n   PASS  Tests\\Feature\\SecureObjectReferencesControllerTest\n  \u2713 authenticated users can view secure object references page           0.09s  \n  \u2713 guests are redirected away from secure object references page        0.01s  \n\n   PASS  Tests\\Feature\\Tests\\TestControllerTest\n  \u2713 authenticated users can view the test runner page                    0.08s  \n  \u2713 test runner executes artisan test command and returns output         0.06s  \n  \u2713 test runner gracefully handles exceptions when command execution fa\u2026 0.06s  \n\n  Tests:    27 passed (216 assertions)\n  Duration: 1.31s\n\n",
+    "tests": [
+        {
+            "name": "invoice item save computes line total and updates invoice totals     0.20s",
+            "status": "passed",
+            "suite": "Tests\\Unit\\InvoiceTotalsTest"
+        },
+        {
+            "name": "invoice totals are recalculated when an item is deleted              0.01s",
+            "status": "passed",
+            "suite": "Tests\\Unit\\InvoiceTotalsTest"
+        },
+        {
+            "name": "login screen can be rendered                                         0.05s",
+            "status": "passed",
+            "suite": "Tests\\Feature\\Auth\\AuthenticationTest"
+        },
+        {
+            "name": "password confirmation requires authentication                        0.01s",
+            "status": "passed",
+            "suite": "Tests\\Feature\\Auth\\PasswordConfirmationTest"
+        },
+        {
+            "name": "authenticated users can view benchmark dashboard                     0.10s",
+            "status": "passed",
+            "suite": "Tests\\Feature\\BenchmarkControllerTest"
+        },
+        {
+            "name": "benchmark dashboard executes benchmark command and returns data      0.10s",
+            "status": "passed",
+            "suite": "Tests\\Feature\\BenchmarkControllerTest"
+        },
+        {
+            "name": "guests are redirected away from benchmark dashboard                  0.01s",
+            "status": "passed",
+            "suite": "Tests\\Feature\\BenchmarkControllerTest"
+        },
+        {
+            "name": "guests are redirected to the login page                              0.01s",
+            "status": "passed",
+            "suite": "Tests\\Feature\\DashboardTest"
+        },
+        {
+            "name": "users can view insecure documents they do not own via id route       0.03s",
+            "status": "passed",
+            "suite": "Tests\\Feature\\Documents\\InsecureDocumentControllerTest"
+        },
+        {
+            "name": "users can view insecure documents they do not own via uuid route     0.02s",
+            "status": "passed",
+            "suite": "Tests\\Feature\\Documents\\InsecureDocumentControllerTest"
+        },
+        {
+            "name": "secure document response disables browser caching                    0.01s",
+            "status": "passed",
+            "suite": "Tests\\Feature\\Documents\\SecureDocumentControllerTest"
+        },
+        {
+            "name": "users cannot view secure documents they do not own                   0.01s",
+            "status": "passed",
+            "suite": "Tests\\Feature\\Documents\\SecureDocumentControllerTest"
+        },
+        {
+            "name": "authenticated users can view enforcement points page                 0.09s",
+            "status": "passed",
+            "suite": "Tests\\Feature\\EnforcementPointsPageTest"
+        },
+        {
+            "name": "guests are redirected away from enforcement points page              0.01s",
+            "status": "passed",
+            "suite": "Tests\\Feature\\EnforcementPointsPageTest"
+        },
+        {
+            "name": "authenticated users can view idor test template page                 0.12s",
+            "status": "passed",
+            "suite": "Tests\\Feature\\IdorTestTemplateControllerTest"
+        },
+        {
+            "name": "guests are redirected away from idor test template page              0.01s",
+            "status": "passed",
+            "suite": "Tests\\Feature\\IdorTestTemplateControllerTest"
+        },
+        {
+            "name": "insecure invoice api allows users to access invoices they do not ow\u2026 0.01s",
+            "status": "passed",
+            "suite": "Tests\\Feature\\Invoices\\InvoiceApiTest"
+        },
+        {
+            "name": "secure invoice api forbids users from accessing invoices they do no\u2026 0.01s",
+            "status": "passed",
+            "suite": "Tests\\Feature\\Invoices\\InvoiceApiTest"
+        },
+        {
+            "name": "secure invoice api allows owners to access their invoices            0.01s",
+            "status": "passed",
+            "suite": "Tests\\Feature\\Invoices\\InvoiceApiTest"
+        },
+        {
+            "name": "users cannot view secure invoices they do not own                    0.01s",
+            "status": "passed",
+            "suite": "Tests\\Feature\\Invoices\\SecureInvoiceControllerTest"
+        },
+        {
+            "name": "authenticated users can view reviewer checklist page                 0.09s",
+            "status": "passed",
+            "suite": "Tests\\Feature\\ReviewerChecklistControllerTest"
+        },
+        {
+            "name": "guests are redirected away from reviewer checklist page              0.01s",
+            "status": "passed",
+            "suite": "Tests\\Feature\\ReviewerChecklistControllerTest"
+        },
+        {
+            "name": "authenticated users can view secure object references page           0.09s",
+            "status": "passed",
+            "suite": "Tests\\Feature\\SecureObjectReferencesControllerTest"
+        },
+        {
+            "name": "guests are redirected away from secure object references page        0.01s",
+            "status": "passed",
+            "suite": "Tests\\Feature\\SecureObjectReferencesControllerTest"
+        },
+        {
+            "name": "authenticated users can view the test runner page                    0.08s",
+            "status": "passed",
+            "suite": "Tests\\Feature\\Tests\\TestControllerTest"
+        },
+        {
+            "name": "test runner executes artisan test command and returns output         0.06s",
+            "status": "passed",
+            "suite": "Tests\\Feature\\Tests\\TestControllerTest"
+        },
+        {
+            "name": "test runner gracefully handles exceptions when command execution fa\u2026 0.06s",
+            "status": "passed",
+            "suite": "Tests\\Feature\\Tests\\TestControllerTest"
+        }
+    ]
+}

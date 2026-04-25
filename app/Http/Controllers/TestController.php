@@ -30,8 +30,8 @@ class TestController extends Controller
         }
 
         $storedResult = null;
-        if (Storage::disk('local')->exists(self::RESULT_FILE_PATH)) {
-            $decodedResult = json_decode((string) Storage::disk('local')->get(self::RESULT_FILE_PATH), true);
+        if (Storage::disk('demo')->exists(self::RESULT_FILE_PATH)) {
+            $decodedResult = json_decode((string) Storage::disk('demo')->get(self::RESULT_FILE_PATH), true);
 
             if (is_array($decodedResult)) {
                 $storedResult = $decodedResult;
@@ -103,7 +103,7 @@ class TestController extends Controller
         }
 
         try {
-            $wasStored = Storage::disk('local')->put(self::RESULT_FILE_PATH, $encodedResult);
+            $wasStored = Storage::disk('demo')->put(self::RESULT_FILE_PATH, $encodedResult);
 
             if ($wasStored !== true) {
                 report(new RuntimeException('Unable to persist test run result.'));
