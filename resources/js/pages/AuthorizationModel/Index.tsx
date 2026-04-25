@@ -135,7 +135,7 @@ export default function AuthorizationModelIndex({
 							<tbody>
 								{filteredRows.map((row) => (
 									<tr
-										key={`${row.resource}-${row.action}-${row.subjectRole}`}
+										key={`${row.resource}-${row.action}-${row.subjectRole}-${row.rule}-${row.default}`}
 										className="border-t border-sidebar-border/70 dark:border-sidebar-border"
 									>
 										<td className="px-4 py-3 font-medium text-foreground">
