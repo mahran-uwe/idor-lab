@@ -19,6 +19,15 @@ type TestsIndexProps = {
 	result?: TestRunResult | null;
 };
 
+type SuiteFilter = "idor-specific" | "all";
+
+const IDOR_SPECIFIC_SUITES = new Set([
+	"Tests\\Feature\\Documents\\InsecureDocumentControllerTest",
+	"Tests\\Feature\\Documents\\SecureDocumentControllerTest",
+	"Tests\\Feature\\Invoices\\InvoiceApiTest",
+	"Tests\\Feature\\Invoices\\SecureInvoiceControllerTest",
+]);
+
 function splitTestNameAndDuration(testName: string): {
 	name: string;
 	duration: string | null;
@@ -42,6 +51,7 @@ function splitTestNameAndDuration(testName: string): {
 
 export default function TestsIndex({ result }: TestsIndexProps) {
 	const [isRunning, setIsRunning] = useState(false);
+	const [suiteFilter, setSuiteFilter] = useState<SuiteFilter>("idor-specific");
 	const isProduction = import.meta.env.PROD;
 
 	const suites = useMemo(() => {
@@ -95,6 +105,19 @@ export default function TestsIndex({ result }: TestsIndexProps) {
 
 		return Array.from(suitesMap.values());
 	}, [result]);
+
+	const idorSpecificSuiteCount = useMemo(
+		() => suites.filter((suite) => IDOR_SPECIFIC_SUITES.has(suite.name)).length,
+		[suites],
+	);
+
+	const filteredSuites = useMemo(() => {
+		if (suiteFilter === "all") {
+			return suites;
+		}
+
+		return suites.filter((suite) => IDOR_SPECIFIC_SUITES.has(suite.name));
+	}, [suites, suiteFilter]);
 
 	const summary = useMemo(() => {
 		if (!result) {
@@ -238,10 +261,39 @@ export default function TestsIndex({ result }: TestsIndexProps) {
 					</div>
 				) : null}
 
+				{result ? (
+					<div className="flex flex-wrap items-center gap-3 rounded-xl border border-sidebar-border/70 bg-muted/30 p-1 dark:border-sidebar-border">
+						<div className="inline-flex items-center gap-1">
+							<button
+								type="button"
+								onClick={() => setSuiteFilter("idor-specific")}
+								className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${
+									suiteFilter === "idor-specific"
+										? "bg-background text-foreground shadow-sm"
+										: "text-muted-foreground hover:bg-background/60 hover:text-foreground"
+								}`}
+							>
+								IDOR Specific Tests ({idorSpecificSuiteCount})
+							</button>
+							<button
+								type="button"
+								onClick={() => setSuiteFilter("all")}
+								className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${
+									suiteFilter === "all"
+										? "bg-background text-foreground shadow-sm"
+										: "text-muted-foreground hover:bg-background/60 hover:text-foreground"
+								}`}
+							>
+								All Tests ({suites.length})
+							</button>
+						</div>
+					</div>
+				) : null}
+
 				<div className="font-mono rounded-xl border border-sidebar-border/70 bg-background/80 p-4 dark:border-sidebar-border">
-					{result && suites.length > 0 ? (
+					{result && filteredSuites.length > 0 ? (
 						<div className="space-y-4">
-							{suites.map((suite) => (
+							{filteredSuites.map((suite) => (
 								<section
 									key={suite.name}
 									className="rounded-md bg-muted/20 p-3"
@@ -301,6 +353,10 @@ export default function TestsIndex({ result }: TestsIndexProps) {
 								</section>
 							))}
 						</div>
+					) : result ? (
+						<p className="text-sm text-muted-foreground">
+							No test suites found for this filter.
+						</p>
 					) : (
 						<p className="text-sm text-muted-foreground">
 							Run tests to see the results here.
