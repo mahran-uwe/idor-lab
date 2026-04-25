@@ -9,7 +9,7 @@ use Inertia\Testing\AssertableInertia;
 uses(RefreshDatabase::class);
 
 test('authenticated users can view the test runner page', function () {
-    Storage::fake('local');
+    Storage::fake('demo');
 
     $user = User::factory()->create();
 
@@ -25,7 +25,7 @@ test('authenticated users can view the test runner page', function () {
 });
 
 test('test runner executes artisan test command and returns output', function () {
-    Storage::fake('local');
+    Storage::fake('demo');
 
     $user = User::factory()->create();
     $simulatedOutput = "PASS  Tests\\Unit\\ExampleTest\n  ✓ that true is true\nFAIL  Tests\\Feature\\Invoices\\SecureInvoiceControllerTest\n  ⨯ users cannot view secure invoices they do not own\n";
@@ -72,7 +72,7 @@ test('test runner executes artisan test command and returns output', function ()
 });
 
 test('test runner gracefully handles exceptions when command execution fails', function () {
-    Storage::fake('local');
+    Storage::fake('demo');
 
     $user = User::factory()->create();
 
