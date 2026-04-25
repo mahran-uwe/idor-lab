@@ -1,5 +1,5 @@
 import { Head } from "@inertiajs/react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { index as enforcementPoints } from "@/routes/enforcement-points";
 
 const diagram = `flowchart LR
@@ -82,26 +82,39 @@ const policyCount = new Set(protectedRoutes.map((route) => route.policy)).size;
 
 export default function EnforcementPointsIndex() {
 	const containerRef = useRef<HTMLDivElement | null>(null);
+	const [isDiagramLoading, setIsDiagramLoading] = useState(true);
+	const [diagramLoadError, setDiagramLoadError] = useState<string | null>(null);
 
 	useEffect(() => {
 		let isMounted = true;
 
 		async function renderDiagram() {
-			const mermaid = (await import("mermaid")).default;
+			setIsDiagramLoading(true);
+			setDiagramLoadError(null);
 
-			mermaid.initialize({
-				startOnLoad: false,
-				securityLevel: "strict",
-				theme: "neutral",
-			});
+			try {
+				const mermaid = (await import("mermaid")).default;
 
-			const { svg } = await mermaid.render(
-				"enforcement-points-diagram",
-				diagram,
-			);
+				mermaid.initialize({
+					startOnLoad: false,
+					securityLevel: "strict",
+					theme: "neutral",
+				});
 
-			if (isMounted && containerRef.current) {
-				containerRef.current.innerHTML = svg;
+				const { svg } = await mermaid.render(
+					"enforcement-points-diagram",
+					diagram,
+				);
+
+				if (isMounted && containerRef.current) {
+					containerRef.current.innerHTML = svg;
+					setIsDiagramLoading(false);
+				}
+			} catch {
+				if (isMounted) {
+					setDiagramLoadError("Unable to load diagram.");
+					setIsDiagramLoading(false);
+				}
 			}
 		}
 
@@ -179,7 +192,29 @@ export default function EnforcementPointsIndex() {
 					</div>
 
 					<div className="overflow-x-auto rounded-lg bg-white p-3">
-						<div ref={containerRef} className="min-w-225" />
+						{isDiagramLoading ? (
+							<div className="flex min-h-56 min-w-225 items-center justify-center gap-3 text-sm text-slate-600">
+								<div
+									className="size-5 animate-spin rounded-full border-2 border-slate-300 border-t-slate-600"
+									role="status"
+									aria-label="Loading diagram"
+								/>
+								{/* <span>Loading diagram...</span> */}
+							</div>
+						) : null}
+						{diagramLoadError ? (
+							<p className="min-w-225 text-sm text-rose-700">
+								{diagramLoadError}
+							</p>
+						) : null}
+						<div
+							ref={containerRef}
+							className={
+								isDiagramLoading || diagramLoadError
+									? "hidden min-w-225"
+									: "min-w-225"
+							}
+						/>
 					</div>
 				</div>
 
